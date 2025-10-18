@@ -3,258 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knowledge Quest - Level Up Your Mind</title>
+    <title>Knowledge Quest – Level Up Your Mind</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            padding: 40px 0;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        h1 {
-            font-size: 4em;
-            margin-bottom: 20px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 1.5em;
-            opacity: 0.9;
-            margin-bottom: 40px;
-        }
-
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .feature-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            width: 300px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-
-        .feature-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            margin: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        .stats-bar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            padding: 15px 25px;
-            border-radius: 30px;
-            display: flex;
-            gap: 20px;
-            animation: slideInRight 1s ease-out;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .stat-icon {
-            font-size: 1.2em;
-        }
-
-        .floating-shapes {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .shape {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            33% {
-                transform: translateY(-30px) rotate(120deg);
-            }
-            66% {
-                transform: translateY(30px) rotate(240deg);
-            }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 500px;
-            animation: modalPop 0.3s ease-out;
-        }
-
-        @keyframes modalPop {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .subject-card {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .subject-card:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.05);
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#fff;overflow-x:hidden}
+        .container{max-width:1200px;margin:0 auto;padding:20px}
+        header{text-align:center;padding:40px 0;animation:fadeInDown 1s ease-out}
+        h1{font-size:4em;margin-bottom:20px;text-shadow:3px 3px 6px rgba(0,0,0,.3);background:linear-gradient(45deg,#f093fb 0%,#f5576c 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .tagline{font-size:1.5em;opacity:.9;margin-bottom:40px}
+        .main-content{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:30px;margin-top:50px}
+        .feature-card{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:20px;padding:30px;width:300px;text-align:center;transition:transform .3s ease,box-shadow .3s ease;animation:fadeInUp 1s ease-out}
+        .feature-card:hover{transform:translateY(-10px);box-shadow:0 15px 40px rgba(0,0,0,.3)}
+        .feature-icon{font-size:3em;margin-bottom:20px}
+        .btn{display:inline-block;padding:15px 40px;background:linear-gradient(45deg,#f093fb 0%,#f5576c 100%);color:#fff;text-decoration:none;border-radius:50px;font-size:1.2em;font-weight:bold;transition:all .3s ease;box-shadow:0 5px 15px rgba(0,0,0,.2);margin:10px;border:none;cursor:pointer}
+        .btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+        .stats-bar{position:fixed;top:20px;right:20px;background:rgba(0,0,0,.7);padding:15px 25px;border-radius:30px;display:flex;gap:20px;animation:slideInRight 1s ease-out}
+        .stat{display:flex;align-items:center;gap:5px}
+        .stat-icon{font-size:1.2em}
+        .floating-shapes{position:fixed;width:100%;height:100%;overflow:hidden;z-index:-1}
+        .shape{position:absolute;opacity:.1;animation:float 20s infinite ease-in-out}
+        @keyframes fadeInDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-30px) rotate(120deg)}66%{transform:translateY(30px) rotate(240deg)}}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;justify-content:center;align-items:center}
+        .modal-content{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px;border-radius:20px;text-align:center;max-width:500px;animation:modalPop .3s ease-out}
+        @keyframes modalPop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+        .subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:30px}
+        .subject-card{background:rgba(255,255,255,.1);padding:20px;border-radius:15px;cursor:pointer;transition:all .3s ease}
+        .subject-card:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
     </style>
 </head>
 <body>
     <div class="floating-shapes">
-        <div class="shape" style="top: 10%; left: 10%; width: 80px; height: 80px; background: #f093fb; border-radius: 50%;"></div>
-        <div class="shape" style="top: 60%; left: 80%; width: 120px; height: 120px; background: #f5576c; transform: rotate(45deg);"></div>
-        <div class="shape" style="top: 40%; left: 40%; width: 60px; height: 60px; background: #4facfe; border-radius: 50%;"></div>
+        <div class="shape" style="top:10%;left:10%;width:80px;height:80px;background:#f093fb;border-radius:50%"></div>
+        <div class="shape" style="top:60%;left:80%;width:120px;height:120px;background:#f5576c;transform:rotate(45deg)"></div>
+        <div class="shape" style="top:40%;left:40%;width:60px;height:60px;background:#4facfe;border-radius:50%"></div>
     </div>
 
     <div class="stats-bar">
-        <div class="stat">
-            <span class="stat-icon">⚡</span>
-            <span id="energy">0</span> Energy
-        </div>
-        <div class="stat">
-            <span class="stat-icon">💎</span>
-            <span id="crystals">0</span> Crystals
-        </div>
-        <div class="stat">
-            <span class="stat-icon">🏠</span>
-            <span id="houses">0</span> Houses
-        </div>
-        <div class="stat">
-            <span class="stat-icon">🏢</span>
-            <span id="buildings">0</span> Buildings
-        </div>
+        <div class="stat"><span class="stat-icon">⚡</span><span id="energy">0</span> Energy</div>
+        <div class="stat"><span class="stat-icon">💎</span><span id="crystals">0</span> Crystals</div>
+        <div class="stat"><span class="stat-icon">🏠</span><span id="houses">0</span> Houses</div>
+        <div class="stat"><span class="stat-icon">🏢</span><span id="buildings">0</span> Buildings</div>
     </div>
 
     <div class="container">
@@ -269,13 +60,11 @@
                 <h3>Learn & Earn</h3>
                 <p>Solve questions across multiple subjects. Each correct answer earns you 10 Energy Points and 5 Crystals!</p>
             </div>
-
             <div class="feature-card">
                 <div class="feature-icon">🏗️</div>
                 <h3>Build Your City</h3>
                 <p>Use crystals to build houses (15💎) and buildings (20💎). Create your dream city!</p>
             </div>
-
             <div class="feature-card">
                 <div class="feature-icon">⭐</div>
                 <h3>30 Levels</h3>
@@ -283,162 +72,30 @@
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 50px;">
-            <a href="#" class="btn" onclick="showSubjects()">Start Learning</a>
-            <a href="#" class="btn" onclick="showCityBuilder()">City Builder</a>
+        <div style="text-align:center;margin-top:50px">
+            <button class="btn" onclick="showSubjects()">Start Learning</button>
+            <button class="btn" onclick="showCityBuilder()">City Builder</button>
         </div>
     </div>
 
+    <!-- Subject picker -->
     <div id="subjectModal" class="modal">
         <div class="modal-content">
             <h2>Choose Your Subject</h2>
             <div class="subject-grid">
-                <div class="subject-card" onclick="startQuiz('Math')">
-                    <div style="font-size: 2em;">🔢</div>
-                    <h3>Mathematics</h3>
-                </div>
-                <div class="subject-card" onclick="startQuiz('Science')">
-                    <div style="font-size: 2em;">🔬</div>
-                    <h3>Science</h3>
-                </div>
-                <div class="subject-card" onclick="startQuiz('History')">
-                    <div style="font-size: 2em;">📜</div>
-                    <h3>History</h3>
-                </div>
-                <div class="subject-card" onclick="startQuiz('English')">
-                    <div style="font-size: 2em;">📚</div>
-                    <h3>English</h3>
-                </div>
+                <div class="subject-card" onclick="startQuiz('math')"><div style="font-size:2em">🔢</div><h3>Math</h3></div>
+                <div class="subject-card" onclick="startQuiz('science')"><div style="font-size:2em">🔬</div><h3>Science</h3></div>
+                <div class="subject-card" onclick="startQuiz('history')"><div style="font-size:2em">📜</div><h3>History</h3></div>
+                <div class="subject-card" onclick="startQuiz('coding')"><div style="font-size:2em">💻</div><h3>Coding</h3></div>
+                <div class="subject-card" onclick="startQuiz('art')"><div style="font-size:2em">🎨</div><h3>Art</h3></div>
             </div>
-            <button class="btn" onclick="closeModal()" style="margin-top: 20px;">Close</button>
+            <button class="btn" onclick="closeModal()">Close</button>
         </div>
     </div>
 
+    <!-- City builder -->
     <div id="cityModal" class="modal">
         <div class="modal-content">
             <h2>City Builder Store</h2>
             <div class="subject-grid">
-                <div class="subject-card" onclick="buyHouse()">
-                    <div style="font-size: 2em;">🏠</div>
-                    <h3>House</h3>
-                    <p>15 Crystals</p>
-                </div>
-                <div class="subject-card" onclick="buyBuilding()">
-                    <div style="font-size: 2em;">🏢</div>
-                    <h3>Building</h3>
-                    <p>20 Crystals</p>
-                </div>
-            </div>
-            <button class="btn" onclick="closeModal()" style="margin-top: 20px;">Close</button>
-        </div>
-    </div>
-
-<script>
-/* ----------  DATA BANKS  ---------- */
-const banks = {
-  math:[
-    {q:"8 × 7 = ?",a:["54","56","58","64"],c:1},{q:"Solve 2x + 5 = 13",a:["x=3","x=4","x=5","x=6"],c:1},{q:"Area of circle radius 3",a:["9π","12π","15π","6π"],c:0},{q:"Derivative of x²",a:["x","2x","x²","0"],c:1},{q:"Integral of 1/x",a:["ln x","e^x","x²","0"],c:0},{q:"12 × 13 = ?",a:["144","156","148","152"],c:1},{q:"Solve 3x – 7 = 14",a:["x=5","x=6","x=7","x=8"],c:2},{q:"What is 15% of 200?",a:["20","25","30","35"],c:2},{q:"Simplify 18/24",a:["2/3","3/4","5/6","7/8"],c:0},{q:"Value of 2⁵",a:["16","32","64","128"],c:1},{q:"Pythagorean triple among",a:["3-4-6","5-12-13","6-8-11","7-9-12"],c:1},{q:"√144 = ?",a:["11","12","13","14"],c:1},{q:"Next prime after 23",a:["25","27","29","31"],c:2},{q:"GCD of 36 & 48",a:["6","8","12","16"],c:2},{q:"LCM of 6 & 8",a:["12","16","24","32"],c:2},{q:"Convert 0.75 to fraction",a:["1/2","2/3","3/4","4/5"],c:2},{q:"Solve x² = 49",a:["x=5","x=6","x=7","x=8"],c:2},{q:"Perimeter of square side 9",a:["27","36","45","54"],c:1},{q:"Volume of cube side 4",a:["16","32","48","64"],c:3},{q:"Slope of y=3x+2",a:["1","2","3","4"],c:2},{q:"tan 45° = ?",a:["0","1","√2","∞"],c:1},{q:"log₁₀100 = ?",a:["0","1","2","10"],c:2},{q:"Decimal 0.2 as %",a:["2 %","20 %","200 %","0.2 %"],c:1},{q:"Factorial 4! = ?",a:["16","20","24","28"],c:2},{q:"Sum angles triangle",a:["90°","180°","270°","360°"],c:1},{q:"Solve 5x = 0",a:["x=0","x=1","x=5","x=-1"],c:0},{q:"Mean of 4,7,10",a:["6","7","8","9"],c:1},{q:"Median of 3,5,8,11,14",a:["5","8","11","9"],c:1},{q:"Mode of 2,3,3,4,5",a:["2","3","4","5"],c:1},{q:"Range of 6,9,15,21",a:["9","12","15","21"],c:2},{q:"Convert 2 km to m",a:["20","200","2000","20000"],c:2},{q:"90 km/h = ? m/s",a:["20","25","30","35"],c:1},{q:"Compound interest rate if double in 10 yrs (rule 72)",a:["~5 %","~7 %","~10 %","~12 %"],c:1},{q:"e^0 = ?",a:["-1","0","1","∞"],c:2},{q:"Matrix determinant [[a,b],[c,d]] formula",a:["ad+bc","ad-bc","a+d","a-d"],c:1}
-  ],
-  science:[
-    {q:"Planet known as Red Planet",a:["Venus","Mars","Jupiter","Saturn"],c:1},{q:"H₂O is",a:["Salt","Water","Oxygen","Carbon"],c:1},{q:"Speed of light ≈",a:["3×10⁸ m/s","3×10⁶ m/s","3×10⁷ m/s","3×10⁹ m/s"],c:0},{q:"Newton's 1st law about",a:["Force","Inertia","Energy","Momentum"],c:1},{q:"Photosynthesis produces",a:["CO₂","O₂","H₂","N₂"],c:1},{q:"Atomic number of Carbon",a:["4","6","8","12"],c:1},{q:"pH of pure water",a:["0","5","7","14"],c:2},{q:"Hardest natural mineral",a:["Quartz","Diamond","Corundum","Apatite"],c:1},{q:"Gas most abundant in air",a:["Oxygen","Nitrogen","CO₂","Argon"],c:1},{q:"Unit of electric current",a:["Volt","Ohm","Ampere","Watt"],c:2},{q:"Sound travels fastest in",a:["Air","Water","Steel","Vacuum"],c:2},{q:"Earth's core mainly",a:["Iron","Nickel","Silicon","Oxygen"],c:0},{q:"Vitamin from sunlight",a:["A","B12","C","D"],c:3},{q:"Number of bones adult human",a:["106","206","306","406"],c:1},{q:"Process of cell division",a:["Mitosis","Meiosis","Fission","Fusion"],c:0},{q:"Chemical symbol Gold",a:["Go","Gd","Au","Ag"],c:2},{q:"Closest star to Earth",a:["Proxima Centauri","Sun","Alpha Centauri","Sirius"],c:1},{q:"Light-year measures",a:["Time","Distance","Brightness","Mass"],c:1},{q:"Organ that pumps blood",a:["Lungs","Heart","Kidney","Liver"],c:1},{q:"Acid in stomach",a:["HCl","H₂SO₄","HNO₃","CH₃COOH"],c:0},{q:"Boiling point water °C",a:["90","100","110","120"],c:1},{q:"Force that opposes motion",a:["Gravity","Friction","Magnetism","Tension"],c:1},{q:"Pluto reclassified 2006 as",a:["Comet","Dwarf planet","Asteroid","Moon"],c:1},{q:"Endocrine gland at base of brain",a:["Pineal","Pituitary","Thyroid","Adrenal"],c:1},{q:"Study of fungi",a:["Botany","Mycology","Ornithology","Entomology"],c:1},{q:"Most conductive metal",a:["Copper","Silver","Gold","Aluminum"],c:1},{q:"Particle with no charge",a:["Electron","Proton","Neutron","Positron"],c:2},{q:"Covalent bond involves",a:["Electron sharing","Electron transfer","Proton sharing","Neutron loss"],c:0},{q:"Catalyst function",a:["Speeds reaction","Slows reaction","Changes product","Adds mass"],c:0},{q:"Earth atmosphere layer with ozone",a:["Troposphere","Stratosphere","Mesosphere","Thermosphere"],c:1},{q:"Power unit",a:["Joule","Watt","Newton","Volt"],c:1},{q:"Human body temp °C",a:["35","37","39","41"],c:1},{q:"Chemical formula table salt",a:["NaCl","KCl","CaCl₂","MgCl₂"],c:0},{q:"Largest organ human body",a:["Heart","Brain","Liver","Skin"],c:3},{q:"Red blood cell pigment",a:["Hemoglobin","Chlorophyll","Insulin","Testosterone"],c:0}
-  ],
-  history:[
-    {q:"1st President USA",a:["Jefferson","Washington","Lincoln","Adams"],c:1},{q:"World War II ended",a:["1939","1945","1950","1918"],c:1},{q:"Great Wall located",a:["Japan","India","China","Korea"],c:2},{q:"Year Berlin Wall fell",a:["1987","1989","1991","1993"],c:1},{q:"Wrote Declaration Independence",a:["Washington","Jefferson","Franklin","Madison"],c:1},{q:"Ancient wonder still standing",a:["Colossus","Pyramids","Hanging Gardens","Lighthouse"],c:1},{q:"First person on Moon",a:["Buzz Aldrin","Neil Armstrong","Yuri Gagarin","Alan Shepard"],c:1},{q:"Empire built by Romans",a:["Greek","Roman","Ottoman","British"],c:1},{q:"Civil Rights leader 'I Have a Dream'",a:["Malcolm X","Martin Luther King Jr.","Rosa Parks","Thurgood Marshall"],c:1},{q:"City bombed atomic bomb 1945 (not Nagasaki)",a:["Tokyo","Hiroshima","Osaka","Kyoto"],c:1},{q:"Wall built by Hadrian",a:["Scotland","Wales","Ireland","France"],c:0},{q:"Ship sank 1912",a:["Lusitania","Titanic","Britannic","Olympic"],c:1},{q:"Leader of India non-violence",a:["Gandhi","Nehru","Patel","Jinnah"],c:0},{q:"War 1950-1953 Korea",a:["WWII","Korean War","Vietnam War","Cold War"],c:1},{q:"Explorer 1492 Americas",a:["Magellan","Columbus","Vespucci","Da Gama"],c:1},{q:"French Revolution started",a:["1776","1789","1799","1804"],c:1},{q:"First Emperor Rome",a:["Augustus","Nero","Caesar","Tiberius"],c:0},{q:"Medieval fortress residence",a:["Castle","Cathedral","Monastery","Colosseum"],c:0},{q:"Renaissance started in",a:["Italy","France","England","Germany"],c:0},{q:"Mongol leader largest empire",a:["Kublai","Genghis","Attila","Tamerlane"],c:1},{q:"Black Death century",a:["12th","13th","14th","15th"],c:2},{q:"Navigator circumnavigated globe first",a:["Columbus","Magellan","Drake","Cook"],c:1},{q:"American Civil War ended",a:["1863","1864","1865","1866"],c:2},{q:"Union president",a:["Jefferson Davis","Abraham Lincoln","Ulysses Grant","Andrew Johnson"],c:1},{q:"Russian last tsar",a:["Peter","Ivan","Nicholas II","Alexander"],c:2},{q:"Berlin Wall constructed",a:["1955","1961","1965","1971"],c:1},{q:"Women's suffrage US amendment",a:["16th","18th","19th","21st"],c:2},{q:"Cold War enemy of USA",a:["China","Germany","USSR","Japan"],c:2},{q:"Pyramids built by",a:["Aztecs","Egyptians","Mayans","Incas"],c:1},{q:"First printing press Europe",a:["Gutenberg","Da Vinci","Galileo","Columbus"],c:0},{q:"Olympics birthplace",a:["Rome","Athens","Sparta","Olympia"],c:3},{q:"Longest reigning UK monarch",a:["Victoria","Elizabeth II","George III","Henry VIII"],c:1},{q:"Explorer reached India sea route",a:["Columbus","Da Gama","Magellan","Cook"],c:1},{q:"US bought Louisiana from",a:["Spain","France","Britain","Mexico"],c:1},{q:"Triangular trade involved",a:["Silk","Slaves","Spices","Tea"],c:1}
-  ],
-  coding:[
-    {q:"Language runs browser",a:["Python","C++","JavaScript","Java"],c:2},{q:"HTML stands for",a:["Hyper Tool","Hyper Text","Home Tool","Hyperlinks"],c:1},{q:"CSS styles",a:["Structure","Behavior","Appearance","Data"],c:2},{q:"Array index starts",a:["0","1","-1","10"],c:0},{q:"Keyword declares variable JS",a:["var","int","float","string"],c:0},{q:"Which is a loop?",a:["if","for","switch","case"],c:1},{q:"Boolean for 'not equal' in JS",a:["!=","!==","<>","~="],c:1},{q:"Print to console JS",a:["print()","console.log()","echo","write()"],c:1},{q:"Data type true/false",a:["String","Boolean","Number","Object"],c:1},{q:"Symbol for single-line comment JS",a:["//","/*","#","<!--"],c:0},{q:"Result: '5' + 2  (JS)",a:["7","52","NaN","Error"],c:1},{q:"HTML tag largest heading",a:["<h1>","<head>","<header>","<hr>"],c:0},{q:"CSS property for text color",a:["color","font-color","text-color","background"],c:0},{q:"Which tag creates hyperlink",a:["<link>","<href>","<a>","<url>"],c:2},{q:"Default port HTTP",a:["21","22","80","443"],c:2},{q:"Git command to copy repo",a:["git push","git clone","git pull","git fork"],c:1},{q:"Python keyword function",a:["func","def","function","lambda"],c:1},{q:"Which language is statically typed",a:["Python","JavaScript","Java","Ruby"],c:2},{q:"SQL command fetch data",a:["GET","FETCH","SELECT","RETRIEVE"],c:2},{q:"HTML attribute for image source",a:["href","src","alt","link"],c:1},{q:"CSS flexbox direction row-reverse value",a:["row","column","row-reverse","reverse"],c:2},{q:"JSON stands for",a:["JavaScript Object Notation","Java Standard Object Notation","Java Source Object Notation","Just Simple Object Notation"],c:0},{q:"Which is NOT a primitive JS",a:["number","string","object","boolean"],c:2},{q:"Operator '??' called",a:["OR","Nullish coalescing","Optional chaining","Ternary"],c:1},{q:"React is a",a:["Database","Framework","Library","Language"],c:2},{q:"HTML document root tag",a:["<html>","<body>","<head>","<!doctype>"],c:0},{q:"Python list append method",a:["add()","push()","append()","insert()"],c:2},{q:"Time complexity of array access by index",a:["O(n)","O(log n)","O(1)","O(n²)"],c:2},{q:"Which status code means 'Not Found'",a:["200","301","401","404"],c:3},{q:"CSS priority order highest",a:["id","class","element","inline style"],c:3},{q:"First programmable computer",a:["ENIAC","Z3","Colossus","UNIVAC"],c:1},{q:"Binary of decimal 5",a:["100","101","110","111"],c:1},{q:"IPv4 address bytes",a:["2","4","6","8"],c:1},{q:"Which company created JavaScript",a:["Microsoft","Netscape","Sun","Google"],c:1},{q:"Git:1},{q:"Study of fungi",a:["Botany","Mycology","Ornithology","Entomology"],c:1},{q:"Most conductive metal",a:["Copper","Silver","Gold","Aluminum"],c:1},{q:"Particle with no charge",a:["Electron","Proton","Neutron","Positron"],c:2},{q:"Covalent bond involves",a:["Electron sharing","Electron transfer","Proton sharing","Neutron loss"],c:0},{q:"Catalyst function",a:["Speeds reaction","Slows reaction","Changes product","Adds mass"],c:0},{q:"Earth atmosphere layer with ozone",a:["Troposphere","Stratosphere","Mesosphere","Thermosphere"],c:1},{q:"Power unit",a:["Joule","Watt","Newton","Volt"],c:1},{q:"Human body temp °C",a:["35","37","39","41"],c:1},{q:"Chemical formula table salt",a:["NaCl","KCl","CaCl₂","MgCl₂"],c:0},{q:"Largest organ human body",a:["Heart","Brain","Liver","Skin"],c:3},{q:"Red blood cell pigment",a:["Hemoglobin","Chlorophyll","Insulin","Testosterone"],c:0}
-  ],
-  history:[
-    {q:"1st President USA",a:["Jefferson","Washington","Lincoln","Adams"],c:1},{q:"World War II ended",a:["1939","1945","1950","1918"],c:1},{q:"Great Wall located",a:["Japan","India","China","Korea"],c:2},{q:"Year Berlin Wall fell",a:["1987","1989","1991","1993"],c:1},{q:"Wrote Declaration Independence",a:["Washington","Jefferson","Franklin","Madison"],c:1},{q:"Ancient wonder still standing",a:["Colossus","Pyramids","Hanging Gardens","Lighthouse"],c:1},{q:"First person on Moon",a:["Buzz Aldrin","Neil Armstrong","Yuri Gagarin","Alan Shepard"],c:1},{q:"Empire built by Romans",a:["Greek","Roman","Ottoman","British"],c:1},{q:"Civil Rights leader 'I Have a Dream'",a:["Malcolm X","Martin Luther King Jr.","Rosa Parks","Thurgood Marshall"],c:1},{q:"City bombed atomic bomb 1945 (not Nagasaki)",a:["Tokyo","Hiroshima","Osaka","Kyoto"],c:1},{q:"Wall built by Hadrian",a:["Scotland","Wales","Ireland","France"],c:0},{q:"Ship sank 1912",a:["Lusitania","Titanic","Britannic","Olympic"],c:1},{q:"Leader of India non-violence",a:["Gandhi","Nehru","Patel","Jinnah"],c:0},{q:"War 1950-1953 Korea",a:["WWII","Korean War","Vietnam War","Cold War"],c:1},{q:"Explorer 1492 Americas",a:["Magellan","Columbus","Vespucci","Da Gama"],c:1},{q:"French Revolution started",a:["1776","1789","1799","1804"],c:1},{q:"First Emperor Rome",a:["Augustus","Nero","Caesar","Tiberius"],c:0},{q:"Medieval fortress residence",a:["Castle","Cathedral","Monastery","Colosseum"],c:0},{q:"Renaissance started in",a:["Italy","France","England","Germany"],c:0},{q:"Mongol leader largest empire",a:["Kublai","Genghis","Attila","Tamerlane"],c:1},{q:"Black Death century",a:["12th","13th","14th","15th"],c:2},{q:"Navigator circumnavigated globe first",a:["Columbus","Magellan","Drake","Cook"],c:1},{q:"American Civil War ended",a:["1863","1864","1865","1866"],c:2},{q:"Union president",a:["Jefferson Davis","Abraham Lincoln","Ulysses Grant","Andrew Johnson"],c:1},{q:"Russian last tsar",a:["Peter","Ivan","Nicholas II","Alexander"],c:2},{q:"Berlin Wall constructed",a:["1955","1961","1965","1971"],c:1},{q:"Women's suffrage US amendment",a:["16th","18th","19th","21st"],c:2},{q:"Cold War enemy of USA",a:["China","Germany","USSR","Japan"],c:2},{q:"Pyramids built by",a:["Aztecs","Egyptians","Mayans","Incas"],c:1},{q:"First printing press Europe",a:["Gutenberg","Da Vinci","Galileo","Columbus"],c:0},{q:"Olympics birthplace",a:["Rome","Athens","Sparta","Olympia"],c:3},{q:"Longest reigning UK monarch",a:["Victoria","Elizabeth II","George III","Henry VIII"],c:1},{q:"Explorer reached India sea route",a:["Columbus","Da Gama","Magellan","Cook"],c:1},{q:"US bought Louisiana from",a:["Spain","France","Britain","Mexico"],c:1},{q:"Triangular trade involved",a:["Silk","Slaves","Spices","Tea"],c:1}
-  ],
-  coding:[
-    {q:"Language runs browser",a:["Python","C++","JavaScript","Java"],c:2},{q:"HTML stands for",a:["Hyper Tool","Hyper Text","Home Tool","Hyperlinks"],c:1},{q:"CSS styles",a:["Structure","Behavior","Appearance","Data"],c:2},{q:"Array index starts",a:["0","1","-1","10"],c:0},{q:"Keyword declares variable JS",a:["var","int","float","string"],c:0},{q:"Which is a loop?",a:["if","for","switch","case"],c:1},{q:"Boolean for 'not equal' in JS",a:["!=","!==","<>","~="],c:1},{q:"Print to console JS",a:["print()","console.log()","echo","write()"],c:1},{q:"Data type true/false",a:["String","Boolean","Number","Object"],c:1},{q:"Symbol for single-line comment JS",a:["//","/*","#","<!--"],c:0},{q:"Result: '5' + 2  (JS)",a:["7","52","NaN","Error"],c:1},{q:"HTML tag largest heading",a:["<h1>","<head>","<header>","<hr>"],c:0},{q:"CSS property for text color",a:["color","font-color","text-color","background"],c:0},{q:"Which tag creates hyperlink",a:["<link>","<href>","<a>","<url>"],c:2},{q:"Default port HTTP",a:["21","22","80","443"],c:2},{q:"Git command to copy repo",a:["git push","git clone","git pull","git fork"],c:1},{q:"Python keyword function",a:["func","def","function","lambda"],c:1},{q:"Which language is statically typed",a:["Python","JavaScript","Java","Ruby"],c:2},{q:"SQL command fetch data",a:["GET","FETCH","SELECT","RETRIEVE"],c:2},{q:"HTML attribute for image source",a:["href","src","alt","link"],c:1},{q:"CSS flexbox direction row-reverse value",a:["row","column","row-reverse","reverse"],c:2},{q:"JSON stands for",a:["JavaScript Object Notation","Java Standard Object Notation","Java Source Object Notation","Just Simple Object Notation"],c:0},{q:"Which is NOT a primitive JS",a:["number","string","object","boolean"],c:2},{q:"Operator '??' called",a:["OR","Nullish coalescing","Optional chaining","Ternary"],c:1},{q:"React is a",a:["Database","Framework","Library","Language"],c:2},{q:"HTML document root tag",a:["<html>","<body>","<head>","<!doctype>"],c:0},{q:"Python list append method",a:["add()","push()","append()","insert()"],c:2},{q:"Time complexity of array access by index",a:["O(n)","O(log n)","O(1)","O(n²)"],c:2},{q:"Which status code means 'Not Found'",a:["200","301","401","404"],c:3},{q:"CSS priority order highest",a:["id","class","element","inline style"],c:3},{q:"First programmable computer",a:["ENIAC","Z3","Colossus","UNIVAC"],c:1},{q:"Binary of decimal 5",a:["100","101","110","111"],c:1},{q:"IPv4 address bytes",a:["2","4","6","8"],c:1},{q:"Which company created JavaScript",a:["Microsoft","Netscape","Sun","Google"],c:1},{q:"GitHub default branch name (2021+)",a:["master","main","develop","trunk"],c:1}
-  ],
-  art:[
-    {q:"Primary colors traditional",a:["RGB","RYB","CMYK","BGR"],c:1},{q:"Who painted Mona Lisa",a:["Van Gogh","Da Vinci","Picasso","Rembrandt"],c:1},{q:"Tool blends colors",a:["Brush","Palette knife","Blender","Eraser"],c:0},{q:"Technique of dots",a:["Stippling","Cross-hatching","Frottage","Impasto"],c:0},{q:"Style geometric shapes",a:["Realism","Cubism","Romanticism","Baroque"],c:1},{q:"Color wheel opposite called",a:["Analogous","Complementary","Triadic","Monochrome"],c:1},{q:"Sculpture 'Thinker' artist",a:["Rodin","Michelangelo","Donatello","Bernini"],c:0},{q:"Famous Japanese print 'Wave' artist",a:["Hokusai","Hiroshige","Utamaro","Sharaku"],c:0},{q:"Renaissance means",a:["Rebirth","Reform","Revival","Recreation"],c:0},{q:"Medium of 'The Starry Night'",a:["Oil","Watercolor","Acrylic","Fresco"],c:0},{q:"Architect of Fallingwater",a:["Wright","Le Corbusier","Mies","Gaudí"],c:0},{q:"Art movement Duchamp fountain",a:["Dada","Surrealism","Futurism","Pop"],c:0},{q:"Painter of Sistine Chapel ceiling",a:["Leonardo","Michelangelo","Raphael","Donatello"],c:1},{q:"Photography invented century",a:["17th","18th","19th","20th"],c:2},{q:"Hue, saturation and",a:["Value","Intensity","Temperature","Shade"],c:0},{q:"Fresco technique paint on",a:["Dry plaster","Wet plaster","Canvas","Wood"],c:1},{q:"Pop-art icon Marilyn",a:["Warhol","Lichtenstein","Haring","Basquiat"],c:0},{q:"Gothic architecture feature",a:["Dome","Flying buttress","Rotunda","Ziggurat"],c:1},{q:"Art Deco popularity decade",a:["1910s","1920s-30s","1940s","1950s"],c:1},{q:"Potter's wheel makes",a:["Sculpture","Ceramics","Glass","Textile"],c:1},{q:"Pointillism pioneer",a:["Seurat","Signac","Van Gogh","Cézanne"],c:0},{q:"Impression sunrise painter",a:["Monet","Renoir","Degas","Manet"],c:0},{q:"Lost wax method used for",a:["Bronze casting","Marble carving","Wood cut","Etching"],c:0},{q:"Primary pigment subtractive",a:["Cyan","Magenta","Yellow","All"],c:3},{q:"Golden ratio approximate",a:["1.414","1.618","2.718","3.142"],c:1},{q:"Ukiyo-e genre subject",a:["Samurai","Landscapes/courtesans","Gods","Animals"],c:1},{q:"Bauhaus school country",a:["Germany","France","Austria","Netherlands"],c:0},{q:"Collage technique glue",a:["Paper","Stone","Metal","Glass"],c:0},{q:"Chiaroscuro emphasizes",a:["Color","Light-dark","Line","Texture"],c:1},{q:"Minimal art reduces to",a:["Essential forms","Maximum detail","Bright color","Narrative"],c:0},{q:"Canvas fabric traditionally",a:["Linen","Cotton","Silk","Wool"],c:0},{q:"Mural scale typically",a:["Small","Large wall","Handheld","Digital only"],c:1},{q:"Art Nouveau nature inspiration",a:["True","False"],c:0},{q:"Performance art medium",a:["Paint","Artist body","Clay","Sound only"],c:1},{q:"Origami origin country",a:["China","Japan","Korea","Thailand"],c:1}
-  ]
-};
-
-/* ----------  STATE  ---------- */
-let level=1, energy=0, crystals=0, houses=0, buildings=0;
-let currentSubject='', currentQindex=0, currentBank=[];
-
-/* ----------  HELPERS  ---------- */
-function updateStats(){
-  document.getElementById('energy').textContent=energy;
-  document.getElementById('crystals').textContent=crystals;
-  document.getElementById('houses').textContent=houses;
-  document.getElementById('buildings').textContent=buildings;
-}
-
-/* ----------  MODAL CONTROL  ---------- */
-function showSubjects(){document.getElementById('subjectModal').style.display='flex';}
-function showCityBuilder(){document.getElementById('cityModal').style.display='flex';}
-function closeModal(){
-  document.getElementById('subjectModal').style.display='none';
-  document.getElementById('cityModal').style.display='none';
-}
-
-/* ----------  QUIZ ENGINE  ---------- */
-function startQuiz(subject){
-  currentSubject=subject;
-  currentBank=[...banks[subject]];          // fresh copy
-  currentQindex=0;
-  closeModal();
-  renderQuestion();
-}
-
-function renderQuestion(){
-  const qObj=currentBank[currentQindex];
-  const card=document.createElement('div');
-  card.id='quizCard';
-  card.className='modal-content';
-  card.style.maxWidth='600px';
-  card.style.zIndex='1001';   //  make it sit on top of the modal backdrop
-  card.innerHTML=`
-    <h2>${currentSubject.charAt(0).toUpperCase()+currentSubject.slice(1)}  –  Level ${level}</h2>
-    <p style="font-size:1.3em;margin:20px 0;">${qObj.q}</p>
-    <div id="choices" style="display:grid;gap:10px;"></div>
-    <p id="feedback" style="margin-top:15px;font-weight:bold;"></p>
-    <button class="btn" onclick="closeModal();document.getElementById('quizCard').remove();">Close</button>
-  `;
-  document.body.appendChild(card);
-  document.getElementById('subjectModal').after(card);
-
-  const choices=document.getElementById('choices');
-  qObj.a.forEach((ans,idx)=>{
-    const btn=document.createElement('button');
-    btn.className='btn'; btn.textContent=ans;
-    btn.onclick=()=>checkAnswer(idx);
-    choices.appendChild(btn);
-  });
-}
-
-function checkAnswer(idx){
-  const correct=currentBank[currentQindex].c;
-  const feedback=document.getElementById('feedback');
-  if(idx===correct){
-    energy+=10; crystals+=5;
-    if(level<30)level++;
-    feedback.textContent='✅ Correct!  +10 ⚡  +5 💎';
-    feedback.style.color='#7fff00';
-  }else{
-    feedback.textContent='❌  Wrong – better luck next time!';
-    feedback.style.color='#ff4d4d';
-  }
-  updateStats();
-  setTimeout(()=>{
-    document.getElementById('quizCard').remove();
-    currentQindex=(currentQindex+1)%currentBank.length;
-  },1200);
-}
-
-/* ----------  CITY BUILDER  ---------- */
-function buyHouse(){ if(crystals>=15){crystals-=15;houses++;updateStats();alert('House built! 🏠')}else{alert('Need 15 💎');} }
-function buyBuilding(){ if(crystals>=20){crystals-=20;buildings++;updateStats();alert('Building constructed! 🏢')}else{alert('Need 20 💎');} }
-
-/* ----------  INIT  ---------- */
-updateStats();
-</script>
-</body>
-</html>
+                <div class="subject-card" onclick="buyHouse()"><div style="font-size:2
