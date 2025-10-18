@@ -1,83 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>WorldBuilder Lite – Study & Build</title>
+  <title>WorldBuilder 3D – Learn & Build Your Universe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Babylon.js -->
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
   <style>
-    :root{--glow:#00f2ff;--dark:#0a0a0a;--light:#fff;--accent:#ff00c1;}
-    *{box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;}
-    body{margin:0;background:var(--dark);color:var(--light);display:flex;flex-direction:column;align-items:center;}
-    header{width:100%;padding:1rem;text-align:center;background:#111;}
-    #stats{display:flex;gap:1.5rem;justify-content:center;margin-top:.5rem;font-weight:bold;}
-    .stat{color:var(--glow);}
-    main{width:100%;max-width:700px;padding:1rem;}
+    :root{
+      --glow:#00f2ff;
+      --dark:#0a0a0a;
+      --light:#ffffff;
+      --accent:#ff00c1;
+      --purple:#6a00ff;
+      --lime:#c6ff00;
+    }
+    *{box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{margin:0;background:var(--dark);color:var(--light);overflow-x:hidden;}
+    h1,h2,h3{font-family:'Fredoka One',cursive;}
+    /* ===== HOMEPAGE ===== */
+    .hero{
+      height:100vh;
+      background:linear-gradient(135deg,#1d2b64 0%, #f8cdda 100%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:2rem;
+      position:relative;
+    }
+    .hero h1{font-size:4rem;margin-bottom:1rem;animation:float 3s ease-in-out infinite;}
+    .hero p{font-size:1.3rem;margin-bottom:2rem;}
+    .hero .btn{font-size:1.2rem;padding:1rem 2rem;border-radius:12px;}
+    .hero img{width:300px;margin-top:2rem;filter:drop-shadow(0 0 20px var(--glow));}
+    @keyframes float{50%{transform:translateY(-10px);}}
+    .features{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;padding:4rem 2rem;background:#111;}
+    .card{background:#222;border:2px solid var(--glow);border-radius:16px;padding:2rem;width:280px;text-align:center;transition:.3s;}
+    .card:hover{transform:translateY(-8px) scale(1.03);}
+    .card img{width:80px;margin-bottom:1rem;}
+    footer{text-align:center;padding:2rem;background:#000;font-size:.9rem;color:#aaa;}
+    /* ===== GAME UI ===== */
+    #gameUI{display:none;}
+    header{width:100%;padding:1rem;background:#1a1a1a;border-bottom:2px solid var(--glow);}
+    #stats{display:flex;gap:2rem;justify-content:center;font-weight:bold;font-size:1.2rem;}
+    .stat{color:var(--lime);}
+    main{width:100%;max-width:900px;margin:auto;padding:2rem;}
     .screen{display:none;}
     .active{display:block;}
-    h2{margin-top:0;}
-    .btn{background:var(--glow);color:var(--dark);padding:.6rem 1rem;border:none;border-radius:4px;cursor:pointer;font-weight:bold;box-shadow:0 0 10px var(--glow);}
-    .btn:disabled{opacity:.4;cursor:not-allowed;}
-    .choice{display:block;width:100%;margin:.5rem 0;padding:.7rem;background:#222;border:1px solid #444;border-radius:6px;cursor:pointer;}
-    .choice:hover{background:#333;}
-    #cityGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:1rem;}
-    .cell{width:100%;aspect-ratio:1/1;background:#1a1a1a;border:1px solid #333;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;}
-    .house{background:radial-gradient(circle,#4caf50 40%,#2e7d32);}
-    .building{background:radial-gradient(circle,#2196f3 40%,#1565c0);}
-    .park{background:radial-gradient(circle,#66bb6a 40%,#388e3c);}
-    .school{background:radial-gradient(circle,#ff9800 40%,#ef6c00);}
-    .statue{background:radial-gradient(circle,#ff00c1 40%,#880e4f);}
-    .correct{animation:pop .4s;}
-    @keyframes pop{50%{transform:scale(1.15);color:var(--glow);}}
-    #cert{display:none;background:#fff;color:#000;padding:2rem;text-align:center;border:10px solid var(--glow);}
+    .btn{background:var(--glow);color:var(--dark);padding:.8rem 1.4rem;border:none;border-radius:8px;font-weight:bold;cursor:pointer;box-shadow:0 0 15px var(--glow);}
+    .btn:hover{transform:translateY(-2px);}
+    .choice{display:block;width:100%;margin:.5rem 0;padding:1rem;background:#222;border:2px solid #444;border-radius:8px;cursor:pointer;font-size:1.1rem;}
+    .choice:hover{background:#333;border-color:var(--glow);}
+    #renderCanvas{width:100%;height:400px;border:3px solid var(--glow);border-radius:12px;}
+    #storePanel{background:#111;border:2px solid var(--accent);border-radius:12px;padding:1rem;margin-top:1rem;}
+    #itemTray{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1rem;}
+    .itemBlock{width:80px;height:80px;background-size:cover;border:2px solid #666;border-radius:8px;cursor:pointer;position:relative;}
+    .itemBlock:hover{border-color:var(--glow);transform:scale(1.1);}
+    .itemBlock .cost{position:absolute;bottom:4px;right:4px;background:#0009;color:#fff;padding:2px 6px;border-radius:4px;font-size:.8rem;}
   </style>
 </head>
 <body>
 
-<header>
-  <h1>WorldBuilder Lite</h1>
-  <div id="stats">
-    <div>Level <span class="stat" id="level">1</span></div>
-    <div>Energy <span class="stat" id="energy">50</span></div>
-    <div>Crystals <span class="stat" id="crystals">0</span></div>
-  </div>
-</header>
+<!-- ************************************************************
+                       HOMEPAGE  (appears first)
+************************************************************* -->
+<section id="home" class="hero">
+  <h1>WorldBuilder 3D</h1>
+  <p>Answer questions → earn crystals → build your own blocky universe!</p>
+  <button class="btn" onclick="startGame()">Start Building</button>
+  <img src="https://i.ibb.co/6yJ30r3/city-3d.png" alt="3d city">
+</section>
 
-<main>
-  <!-- ========= QUEST SCREEN ========= -->
-  <div id="questScreen" class="screen active">
-    <h2 id="subject">Math</h2>
-    <p id="question">Loading question...</p>
-    <div id="choices"></div>
-    <p id="feedback"></p>
-    <button class="btn" id="nextBtn" style="display:none;">Next</button>
+<section class="features" id="features">
+  <div class="card">
+    <img src="https://i.ibb.co/z5wZc7Z/brain.png">
+    <h3>Learn & Earn</h3>
+    <p>Every correct answer gives 10 Energy + 5 Crystals to spend on blocks!</p>
   </div>
+  <div class="card">
+    <img src="https://i.ibb.co/P9rV8ZN/minecraft-house.png">
+    <h3>Minecraft-Style Builder</h3>
+    <p>Drag-and-drop houses, hospitals, parks, castles into a real 3-D world.</p>
+  </div>
+  <div class="card">
+    <img src="https://i.ibb.co/3sR5B0D/multiplayer.png">
+    <h3>Merge Realms</h3>
+    <p>Co-op quests let you build together and leave permanent monuments.</p>
+  </div>
+</section>
 
-  <!-- ========= CITY BUILDER STORE ========= -->
-  <div id="storeScreen" class="screen">
-    <h2>City Builder Store</h2>
-    <p>Click an item and then click an empty city tile to build.</p>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
-      <button class="btn storeBtn" data-item="house" data-cost="15" data-energy="10">House 15💎</button>
-      <button class="btn storeBtn" data-item="building" data-cost="20" data-energy="10">Building 20💎</button>
-      <button class="btn storeBtn" data-item="park" data-cost="35" data-energy="10">Park 35💎</button>
-      <button class="btn storeBtn" data-item="school" data-cost="50" data-energy="10">School 50💎</button>
-      <button class="btn storeBtn" data-item="statue" data-cost="99" data-energy="10">Statue 99💎</button>
+<!-- ************************************************************
+                        GAME  UI
+************************************************************* -->
+<div id="gameUI">
+  <header>
+    <h2 style="text-align:center;margin:.5rem 0;">WorldBuilder 3D</h2>
+    <div id="stats">
+      <div>Level <span class="stat" id="level">1</span></div>
+      <div>Energy <span class="stat" id="energy">50</span></div>
+      <div>Crystals <span class="stat" id="crystals">0</span></div>
     </div>
-    <div id="cityGrid"></div>
-    <button class="btn" id="backToQuest">Back to Questions</button>
-  </div>
+  </header>
 
-  <!-- ========= CERTIFICATE ========= -->
-  <div id="cert">
-    <h1>🏆 CONGRATULATIONS 🏆</h1>
-    <h2>You reached Level 30!</h2>
-    <p>You are officially a WorldBuilder Master.</p>
-    <button class="btn" onclick="window.print()">Print Certificate</button>
-  </div>
-</main>
+  <main>
+    <!-- QUEST SCREEN -->
+    <div id="questScreen" class="screen active">
+      <h2 id="subject">Math</h2>
+      <p id="question">Loading question...</p>
+      <div id="choices"></div>
+      <p id="feedback"></p>
+      <button class="btn" id="nextBtn" style="display:none;">Next</button>
+    </div>
 
+    <!-- 3-D CITY BUILDER -->
+    <div id="buildScreen" class="screen">
+      <h2>3-D City Builder</h2>
+      <p>Drag an item below into the world (left-click to place, right-click to remove).</p>
+      <canvas id="renderCanvas"></canvas>
+      <div id="storePanel">
+        <div id="itemTray">
+          <div class="itemBlock" data-mesh="house" data-cost="15" style="background-image:url(https://i.ibb.co/z5wZc7Z/house-icon.png);"><span class="cost">15</span></div>
+          <div class="itemBlock" data-mesh="building" data-cost="20" style="background-image:url(https://i.ibb.co/3W0rVKS/building-icon.png);"><span class="cost">20</span></div>
+          <div class="itemBlock" data-mesh="hospital" data-cost="35" style="background-image:url(https://i.ibb.co/T8KxVKG/hospital-icon.png);"><span class="cost">35</span></div>
+          <div class="itemBlock" data-mesh="park" data-cost="40" style="background-image:url(https://i.ibb.co/L8yBKq5/park-icon.png);"><span class="cost">40</span></div>
+          <div class="itemBlock" data-mesh="castle" data-cost="99" style="background-image:url(https://i.ibb.co/P9rV8ZN/castle-icon.png);"><span class="cost">99</span></div>
+        </div>
+        <button class="btn" onclick="backToQuest()">Back to Questions</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ************************************************************
+                            JS
+************************************************************* -->
 <script>
-/* ====== QUESTION BANK ====== */
+/* ========== STATE ========== */
+let level = 1, energy = 50, crystals = 0, currentQ = null;
+const MAX_LEVEL = 30;
+const subjects = ['math','science','history','coding','art'];
+
+/* ========== UTILS ========== */
+const rand = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const randItem = arr=>arr[rand(0,arr.length-1)];
+const shuffle = arr=>{const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+/* ========== QUESTIONS (40 per subject) ========== */
 const bank={
   math:[
     {q:"8 × 7 = ?",a:["54","56","58","64"],c:1},
@@ -349,120 +417,172 @@ const bank={
     {q:"Origami origin country",a:["China","Japan","Korea","Thailand"],c:1}
   ]
 };
-/* ====== STATE ====== */
-let level=1,energy=50,crystals=0,currentQ=null,selectedItem=null;
-const MAX_LEVEL=30;
-const subjects=['math','science','history','coding','art'];
 
-/* ====== DOM ====== */
-const qs=document.getElementById('questScreen');
-const ss=document.getElementById('storeScreen');
-const qEl=document.getElementById('question');
-const choicesEl=document.getElementById('choices');
-const feedbackEl=document.getElementById('feedback');
-const nextBtn=document.getElementById('nextBtn');
-const cityGrid=document.getElementById('cityGrid');
+/* ========== DOM HOOKS ========== */
+const home = document.getElementById('home');
+const features = document.getElementById('features');
+const gameUI = document.getElementById('gameUI');
+const questScreen = document.getElementById('questScreen');
+const buildScreen = document.getElementById('buildScreen');
 
-/* ====== INIT ====== */
-document.getElementById('level').textContent=level;
-document.getElementById('energy').textContent=energy;
-document.getElementById('crystals').textContent=crystals;
-loadQuestion();
-buildGrid();
-bindStore();
-
-/* ====== QUEST LOGIC ====== */
-function loadQuestion(){
-  const subject=subjects[(level-1)%subjects.length];
-  const list=bank[subject];
-  currentQ=list[(level-1)%list.length];
-  document.getElementById('subject').textContent=subject.charAt(0).toUpperCase()+subject.slice(1);
-  qEl.textContent=currentQ.q;
-  choicesEl.innerHTML='';
-  currentQ.a.forEach((ans,i)=>{
-    const btn=document.createElement('button');
-    btn.className='choice';
-    btn.textContent=String.fromCharCode(65+i)+') '+ans;
-    btn.onclick=()=>checkAnswer(i);
-    choicesEl.appendChild(btn);
-  });
-  feedbackEl.textContent='';
-  nextBtn.style.display='none';
+/* ========== GAME FLOW ========== */
+function startGame(){
+  home.style.display = 'none';
+  features.style.display = 'none';
+  gameUI.style.display = 'block';
+  loadQuestion();
+  initBabylon();
 }
+
+function backToQuest(){
+  questScreen.classList.add('active');
+  buildScreen.classList.remove('active');
+}
+
+/* ========== QUEST LOGIC ========== */
+/* ========== FAST QUESTION LOADER ========== */
+function loadQuestion(){
+  const subject = subjects[(level-1)%subjects.length];
+  const list = bank[subject];                // already in RAM → no I/O
+  currentQ = list[(level-1)%list.length];
+
+  // tiny spinner for "feel"
+  const qEl = document.getElementById('question');
+  const choicesEl = document.getElementById('choices');
+  qEl.innerHTML = '<span style="opacity:.6;">🌀</span>';
+  choicesEl.innerHTML = '';
+
+  setTimeout(()=>{                           // 200 ms max
+    document.getElementById('subject').textContent = subject.charAt(0).toUpperCase()+subject.slice(1);
+    qEl.textContent = currentQ.q;
+    currentQ.a.forEach((ans,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = String.fromCharCode(65+i)+') '+ans;
+      btn.onclick = ()=>checkAnswer(i);
+      choicesEl.appendChild(btn);
+    });
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('nextBtn').style.display = 'none';
+  },200);
+}
+
 function checkAnswer(idx){
-  const correct=idx===currentQ.c;
+  const correct = idx === currentQ.c;
   if(correct){
-    energy+=10;crystals+=5;
-    feedbackEl.textContent='✅ Correct! +10 Energy +5 Crystals';
-    feedbackEl.className='correct';
+    energy += 10; crystals += 5;
+    document.getElementById('feedback').textContent = '✅ Correct! +10 Energy +5 Crystals';
+    document.getElementById('feedback').className = 'correct';
   }else{
-    energy=Math.max(0,energy-5);
-    feedbackEl.textContent=`❌ Wrong. The answer was ${String.fromCharCode(65+currentQ.c)}) ${currentQ.a[currentQ.c]}`;
-    feedbackEl.className='';
+    energy = Math.max(0,energy-5);
+    document.getElementById('feedback').textContent = `❌ Wrong. Answer: ${String.fromCharCode(65+currentQ.c)}) ${currentQ.a[currentQ.c]}`;
+    document.getElementById('feedback').className = '';
   }
   updateHUD();
-  Array.from(choicesEl.children).forEach(b=>b.disabled=true);
-  nextBtn.style.display='inline-block';
+  Array.from(document.getElementById('choices').children).forEach(b=>b.disabled=true);
+  document.getElementById('nextBtn').style.display = 'inline-block';
 }
-nextBtn.onclick=()=>{
-  if(level>=MAX_LEVEL){showCert();return;}
-  level++;energy=Math.min(energy+5,999); //bonus energy each level
+
+document.getElementById('nextBtn').onclick = ()=>{
+  if(level>=MAX_LEVEL){alert('🏆 You win! Certificate coming soon.');return;}
+  level++; energy = Math.min(energy+5,999);
   updateHUD();
   loadQuestion();
 };
 
-/* ====== CITY BUILDER ====== */
-function buildGrid(){
-  cityGrid.innerHTML='';
-  for(let i=0;i<36;i++){
-    const cell=document.createElement('div');
-    cell.className='cell';
-    cell.dataset.index=i;
-    cell.onclick=()=>placeItem(cell);
-    cityGrid.appendChild(cell);
+function updateHUD(){
+  document.getElementById('level').textContent = level;
+  document.getElementById('energy').textContent = energy;
+  document.getElementById('crystals').textContent = crystals;
+  if(level>=2 && !document.getElementById('buildBtn')){
+    const buildBtn = document.createElement('button');
+    buildBtn.id = 'buildBtn';
+    buildBtn.className = 'btn';
+    buildBtn.textContent = '🏗️ City Builder';
+    buildBtn.onclick = ()=>{questScreen.classList.remove('active');buildScreen.classList.add('active');};
+    document.querySelector('header').appendChild(buildBtn);
   }
 }
-function bindStore(){
-  document.querySelectorAll('.storeBtn').forEach(btn=>{
-    btn.onclick=()=>{
-      selectedItem={type:btn.dataset.item,cost:+btn.dataset.cost,energy:+btn.dataset.energy};
-      document.querySelectorAll('.storeBtn').forEach(b=>b.style.boxShadow='');
-      btn.style.boxShadow='0 0 15px var(--glow)';
-    };
-  });
-}
-function placeItem(cell){
-  if(!selectedItem){alert('Pick an item in the store first.');return;}
-  if(cell.classList.length>1){alert('Tile occupied.');return;}
-  if(crystals<selectedItem.cost){alert('Not enough crystals.');return;}
-  if(energy<selectedItem.energy){alert('Not enough energy.');return;}
-  crystals-=selectedItem.cost;
-  energy-=selectedItem.energy;
-  cell.classList.add(selectedItem.type);
-  cell.textContent={house:'🏠',building:'🏢',park:'🌳',school:'🏫',statue:'🗿'}[selectedItem.type];
-  updateHUD();
-}
-document.getElementById('backToQuest').onclick=()=>{
-  qs.classList.add('active');ss.classList.remove('active');
+
+/* ========== BABYLON.JS 3-D WORLD ========== */
+let scene, camera, pickedMesh = null, ghostBlock = null;
+const blockSize = 2;
+const blockTypes = {
+  house:{color:new BABYLON.Color3(0,1,0),emoji:'🏠'},
+  building:{color:new BABYLON.Color3(0,0,1),emoji:'🏢'},
+  hospital:{color:new BABYLON.Color3(1,1,1),emoji:'🏥'},
+  park:{color:new BABYLON.Color3(0.5,1,0),emoji:'🌳'},
+  castle:{color:new BABYLON.Color3(0.6,0.2,0.8),emoji:'🏰'}
 };
 
-/* ====== NAV ====== */
-function updateHUD(){
-  document.getElementById('level').textContent=level;
-  document.getElementById('energy').textContent=energy;
-  document.getElementById('crystals').textContent=crystals;
-  if(level>=2){
-    document.getElementById('storeBtn')?.remove(); //only add once
-    const storeBtn=document.createElement('button');
-    storeBtn.id='storeBtn';storeBtn.className='btn';storeBtn.textContent='City Builder';
-    storeBtn.onclick=()=>{qs.classList.remove('active');ss.classList.add('active');};
-    document.querySelector('header').appendChild(storeBtn);
-  }
+function initBabylon(){
+  const canvas = document.getElementById('renderCanvas');
+  const engine = new BABYLON.Engine(canvas,true);
+  scene = new BABYLON.Scene(engine);
+  scene.clearColor = new BABYLON.Color3(0.5,0.8,1); // sky blue
+
+  // Camera & light
+  camera = new BABYLON.ArcRotateCamera('cam',-Math.PI/2,Math.PI/3,30,BABYLON.Vector3.Zero(),scene);
+  camera.attachControl(canvas,true);
+  new BABYLON.HemisphericLight('light',new BABYLON.Vector3(0,1,0),scene);
+
+  // Ground grid
+  const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:40,height:40},scene);
+  const groundMat = new BABYLON.StandardMaterial('groundMat',scene);
+  groundMat.diffuseColor = new BABYLON.Color3(0.2,0.7,0.2);
+  ground.material = groundMat;
+
+  // Drag & drop UI
+  document.querySelectorAll('.itemBlock').forEach(block=>{
+    block.draggable = true;
+    block.ondragstart = e=>{e.dataTransfer.setData('mesh',block.dataset.mesh);e.dataTransfer.setData('cost',block.dataset.cost);};
+  });
+  canvas.ondragover = e=>e.preventDefault();
+  canvas.ondrop = e=>{
+    e.preventDefault();
+    const meshType = e.dataTransfer.getData('mesh');
+    const cost = parseInt(e.dataTransfer.getData('cost'));
+    if(crystals<cost){alert('Not enough crystals!');return;}
+    if(energy<10){alert('Not enough energy!');return;}
+    // Ray cast to world position
+    const pick = scene.pick(e.offsetX,e.offsetY);
+    if(!pick.hit) return;
+    const pos = pick.pickedPosition;
+    pos.x = Math.round(pos.x/blockSize)*blockSize;
+    pos.z = Math.round(pos.z/blockSize)*blockSize;
+    pos.y = blockSize/2;
+    placeBlock(meshType,pos,cost);
+  };
+
+  engine.runRenderLoop(()=>scene.render());
+  window.addEventListener('resize',()=>engine.resize());
 }
-function showCert(){
-  qs.style.display=ss.style.display='none';
-  document.getElementById('cert').style.display='block';
+
+function placeBlock(type,position,cost){
+  crystals -= cost; energy -= 10; updateHUD();
+  const block = BABYLON.MeshBuilder.CreateBox(type,{size:blockSize},scene);
+  block.position = position;
+  const mat = new BABYLON.StandardMaterial(type+'Mat',scene);
+  mat.diffuseColor = blockTypes[type].color;
+  mat.emissiveColor = blockTypes[type].color.scale(0.3);
+  block.material = mat;
+  // Floating emoji
+  const label = BABYLON.MeshBuilder.CreatePlane('label',{size:1.5},scene);
+  label.position = position.clone(); label.position.y += 2;
+  label.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+  const labelTexture = new BABYLON.DynamicTexture('labelTex',{width:256,height:256},scene);
+  const labelText = new BABYLON.StandardMaterial('labelMat',scene);
+  labelText.diffuseTexture = labelTexture;
+  labelText.emissiveColor = new BABYLON.Color3(1,1,1);
+  label.material = labelText;
+  const ctx = labelTexture.getContext();
+  ctx.font = "120px Fredoka One";
+  ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.fillText(blockTypes[type].emoji,128,180);
+  labelTexture.update();
 }
+
+/* ========== ON LOAD ========== */
+updateHUD();
 </script>
 </body>
 </html>
