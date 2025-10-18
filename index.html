@@ -43,7 +43,7 @@
 </header>
 
 <main>
-  <!-- ========= QUEST SCREEN ========= -->
+  <!-- QUEST SCREEN -->
   <div id="questScreen" class="screen active">
     <h2 id="subject">Math</h2>
     <p id="question">Loading question...</p>
@@ -52,7 +52,7 @@
     <button class="btn" id="nextBtn" style="display:none;">Next</button>
   </div>
 
-  <!-- ========= CITY BUILDER STORE ========= -->
+  <!-- CITY BUILDER STORE -->
   <div id="storeScreen" class="screen">
     <h2>City Builder Store</h2>
     <p>Click an item and then click an empty city tile to build.</p>
@@ -67,7 +67,7 @@
     <button class="btn" id="backToQuest">Back to Questions</button>
   </div>
 
-  <!-- ========= CERTIFICATE ========= -->
+  <!-- CERTIFICATE -->
   <div id="cert">
     <h1>🏆 CONGRATULATIONS 🏆</h1>
     <h2>You reached Level 30!</h2>
@@ -77,43 +77,20 @@
 </main>
 
 <script>
-/* ====== QUESTION BANK ====== */
-
-
-/* ====== STATE ====== */
-let level=1,energy=50,crystals=0,currentQ=null,selectedItem=null;
-const MAX_LEVEL=30;
-const subjects=['math','science','history','coding','art'];
-
-/* ====== DOM ====== */
-const qs=document.getElementById('questScreen');
-const ss=document.getElementById('storeScreen');
-const qEl=document.getElementById('question');
-const choicesEl=document.getElementById('choices');
-const feedbackEl=document.getElementById('feedback');
-const nextBtn=document.getElementById('nextBtn');
-const cityGrid=document.getElementById('cityGrid');
-
-/* ====== INIT ====== */
-document.getElementById('level').textContent=level;
-document.getElementById('energy').textContent=energy;
-document.getElementById('crystals').textContent=crystals;
-loadQuestion();
-buildGrid();
-bindStore();
-
-/* ====== QUEST LOGIC ====== */
-<script>
-/* ====== QUESTION GENERATOR ====== */
-const usedHashes = new Set();        // session-level deduplication
-function hash(str){return str.split('').reduce((a,c)=>a=((a<<5)-a+c.charCodeAt(0))&a,0);}
-function rng(seed){let s=Math.sin(seed)*10000;return s-Math.floor(s);}
+/* ========== ON-THE-FLY QUESTION GENERATOR ========== */
+const usedHashes=new Set();
+function hash(str){return str.split('').reduce((a,c)=>((a<<5)-a+c.charCodeAt(0))&a,0);}
+function rng(seed){const s=Math.sin(seed)*10000;return s-Math.floor(s);}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function randItem(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function roundChoices(n){const correct=Math.round(n);return shuffle([correct,correct+rand(1,5),correct-rand(1,5),correct+rand(6,9)]);}
 
 function makeQuestion(level){
   const subjects=['math','science','history','coding','art'];
   const subject=subjects[(level-1)%subjects.length];
-  const diff=level;                // 1-30
-  let qObj, h;
+  const diff=level;
+  let qObj,h;
   do{
     qObj=generateBySubject(subject,diff);
     h=hash(JSON.stringify(qObj));
@@ -121,7 +98,6 @@ function makeQuestion(level){
   usedHashes.add(h);
   return qObj;
 }
-
 function generateBySubject(subj,d){
   switch(subj){
     case 'math': return mathQ(d);
@@ -131,199 +107,25 @@ function generateBySubject(subj,d){
     case 'art': return artQ(d);
   }
 }
-
-/* --- generators by subject --- */
+/* ------------- subject generators ------------- */
 function mathQ(d){
-  if(d<=5){                               // basic arithmetic
-    const a=rand(2,9), b=rand(2,9), op=randItem(['+','-','×']);
+  if(d<=5){
+    const a=rand(2,9),b=rand(2,9),op=randItem(['+','-','×']);
     const ans=op==='+'?a+b:op==='-'?a-b:a*b;
     return {q:`${a} ${op} ${b} = ?`,a:shuffle([ans,ans+rand(1,3),ans-rand(1,3),ans+rand(4,6)]),c:0};
   }
-  if(d<=10){                              // linear equation
-    const a=rand(2,6), x=rand(1,9), c=a*x+rand(2,8);
+  if(d<=10){
+    const a=rand(2,6),x=rand(1,9),c=a*x+rand(2,8);
     return {q:`Solve  ${a}x + ${c-a*x} = ${c}`,a:[`x=${x-2}`,`x=${x}`,`x=${x+2}`,`x=${x+4}`],c:1};
   }
-  if(d<=15){                              // area / circle
-    const r=rand(3,12), area=Math.PI*r*r;
+  if(d<=15){
+    const r=rand(3,12),area=Math.PI*r*r;
     return {q:`Area of circle with radius ${r} (round to nearest whole)`,a:roundChoices(area),c:0};
   }
-  if(d<=20){                              // quadratic
-    const x1=rand(-5,5), x2=rand(-5,5), a=1;
-    const b=-(x1+x2), c=x1*x2;
+  if(d<=20){
+    const x1=rand(-5,5),x2=rand(-5,5),a=1;
+    const b=-(x1+x2),c=x1*x2;
     return {q:`Factor  x² ${b>=0?'+':''} ${b}x ${c>=0?'+':''} ${c}`,a:[`(x${-x1>=0?'+':''}${-x1})(x${-x2>=0?'+':''}${-x2})`,`(x+2)(x+3)`,`(x+1)(x+6)`,`(x-4)(x+9)`],c:0};
   }
-  // derivative
-  const coeff=rand(2,7), pow=rand(2,5);
-  return {q:`Derivative of  ${coeff}x^${pow}`,a:[`${coeff*pow}x^${pow-1}`,`${coeff}x^${pow-1}`,`${pow}x^${pow-1}`,`0`],c:0};
-}
-
-function scienceQ(d){
-  if(d<=6){
-    const planets=[{n:'Mars',f:'Red Planet'},{n:'Venus',f:'Hottest Planet'},{n:'Jupiter',f:'Largest Planet'},{n:'Saturn',f:'Ringed Planet'}];
-    const pick=randItem(planets);
-    return {q:`Which planet is known as the "${pick.f}"?`,a:shuffle([pick.n,'Earth','Neptune','Mercury']),c:0};
-  }
-  if(d<=12){
-    const els=[{s:'H',n:'Hydrogen'},{s:'O',n:'Oxygen'},{s:'Na',n:'Sodium'},{s:'C',n:'Carbon'}];
-    const pick=randItem(els);
-    return {q:`Symbol "${pick.s}" stands for?`,a:shuffle([pick.n,'Helium','Nitrogen','Gold']),c:0};
-  }
-  if(d<=18){
-    const speed=3e8;
-    return {q:`Speed of light in vacuum (×10⁸ m/s)`,a:['2.5','3.0','3.5','4.0'],c:1};
-  }
-  // Newton laws
-  return {q:`Newton’s first law is the law of?`,a:['Force','Inertia','Acceleration','Momentum'],c:1};
-}
-
-function historyQ(d){
-  const usPres=['George Washington','Thomas Jefferson','Abraham Lincoln','Franklin D. Roosevelt'];
-  const events=[
-    {y:1945,e:'World War II ended'},
-    {y:1969,e:'Moon landing'},
-    {y:1989,e:'Berlin Wall fell'},
-    {y:2001,e:'Wikipedia launched'}
-  ];
-  if(d<=10){
-    const pick=randItem(usPres);
-    return {q:`Which U.S. President is pictured on the one-dollar bill?`,a:shuffle([pick,'Andrew Jackson','Ulysses Grant','Benjamin Franklin']),c:0};
-  }
-  const pick=randItem(events);
-  return {q:`In which year did ${pick.e}?`,a:shuffle([pick.y,pick.y-5,pick.y+5,pick.y+10]),c:0};
-}
-
-function codingQ(d){
-  if(d<=5){
-    const langs=[{n:'JavaScript',f:'runs in browser'},{n:'Python',f:'known for simplicity'},{n:'C++',f:'used in gaming'},{n:'Java',f:'object-oriented'}];
-    const pick=randItem(langs);
-    return {q:`Which language is famous because it ${pick.f}?`,a:shuffle([pick.n,'Ruby','Swift','Go']),c:0};
-  }
-  if(d<=12){
-    return {q:`HTML stands for?`,a:['HyperText Markup Language','HighText Machine Language','Hyper Tool Multi Language','None'],c:0};
-  }
-  if(d<=20){
-    const arr=[rand(1,9),rand(1,9),rand(1,9)];
-    return {q:`Index of last element in array [${arr.join(', ')}]`,a:['0','1','2','3'],c:2};
-  }
-  // big-O
-  return {q:`Time complexity of binary search`,a:['O(n)','O(log n)','O(n²)','O(1)'],c:1};
-}
-
-function artQ(d){
-  if(d<=6){
-    return {q:`Primary colors in traditional painting`,a:['Red, Yellow, Blue','Red, Green, Blue','Cyan, Magenta, Yellow','Black, White, Grey'],c:0};
-  }
-  if(d<=12){
-    return {q:`Who painted the Mona Lisa?`,a:shuffle(['Leonardo da Vinci','Vincent van Gogh','Pablo Picasso','Michelangelo']),c:0};
-  }
-  if(d<=18){
-    return {q:`Technique using small dots to create an image`,a:['Stippling','Cross-hatching','Frottage','Impasto'],c:0};
-  }
-  return {q:`Art style that emphasizes geometric shapes`,a:['Realism','Cubism','Romanticism','Baroque'],c:1};
-}
-
-/* ====== HELPERS ====== */
-function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function randItem(arr){return arr[rand(0,arr.length-1)];}
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function roundChoices(n){const correct=Math.round(n);return shuffle([correct,correct+rand(1,5),correct-rand(1,5),correct+rand(6,9)]);}
-
-/* ====== NEW loadQuestion() ====== */
-function loadQuestion(){
-  const qObj=makeQuestion(level);
-  currentQ=qObj;
-  const subject=subjects[(level-1)%subjects.length];
-  document.getElementById('subject').textContent=subject.charAt(0).toUpperCase()+subject.slice(1);
-  document.getElementById('question').textContent=qObj.q;
-  const choicesEl=document.getElementById('choices');
-  choicesEl.innerHTML='';
-  qObj.a.forEach((ans,i)=>{
-    const btn=document.createElement('button');
-    btn.className='choice';
-    btn.textContent=String.fromCharCode(65+i)+') '+ans;
-    btn.onclick=()=>checkAnswer(i);
-    choicesEl.appendChild(btn);
-  });
-  document.getElementById('feedback').textContent='';
-  document.getElementById('nextBtn').style.display='none';
-}
-/* initialise first question */
-loadQuestion();
-</script>
-function checkAnswer(idx){
-  const correct=idx===currentQ.c;
-  if(correct){
-    energy+=10;crystals+=5;
-    feedbackEl.textContent='✅ Correct! +10 Energy +5 Crystals';
-    feedbackEl.className='correct';
-  }else{
-    energy=Math.max(0,energy-5);
-    feedbackEl.textContent=`❌ Wrong. The answer was ${String.fromCharCode(65+currentQ.c)}) ${currentQ.a[currentQ.c]}`;
-    feedbackEl.className='';
-  }
-  updateHUD();
-  Array.from(choicesEl.children).forEach(b=>b.disabled=true);
-  nextBtn.style.display='inline-block';
-}
-nextBtn.onclick=()=>{
-  if(level>=MAX_LEVEL){showCert();return;}
-  level++;energy=Math.min(energy+5,999); //bonus energy each level
-  updateHUD();
-  loadQuestion();
-};
-
-/* ====== CITY BUILDER ====== */
-function buildGrid(){
-  cityGrid.innerHTML='';
-  for(let i=0;i<36;i++){
-    const cell=document.createElement('div');
-    cell.className='cell';
-    cell.dataset.index=i;
-    cell.onclick=()=>placeItem(cell);
-    cityGrid.appendChild(cell);
-  }
-}
-function bindStore(){
-  document.querySelectorAll('.storeBtn').forEach(btn=>{
-    btn.onclick=()=>{
-      selectedItem={type:btn.dataset.item,cost:+btn.dataset.cost,energy:+btn.dataset.energy};
-      document.querySelectorAll('.storeBtn').forEach(b=>b.style.boxShadow='');
-      btn.style.boxShadow='0 0 15px var(--glow)';
-    };
-  });
-}
-function placeItem(cell){
-  if(!selectedItem){alert('Pick an item in the store first.');return;}
-  if(cell.classList.length>1){alert('Tile occupied.');return;}
-  if(crystals<selectedItem.cost){alert('Not enough crystals.');return;}
-  if(energy<selectedItem.energy){alert('Not enough energy.');return;}
-  crystals-=selectedItem.cost;
-  energy-=selectedItem.energy;
-  cell.classList.add(selectedItem.type);
-  cell.textContent={house:'🏠',building:'🏢',park:'🌳',school:'🏫',statue:'🗿'}[selectedItem.type];
-  updateHUD();
-}
-document.getElementById('backToQuest').onclick=()=>{
-  qs.classList.add('active');ss.classList.remove('active');
-};
-
-/* ====== NAV ====== */
-function updateHUD(){
-  document.getElementById('level').textContent=level;
-  document.getElementById('energy').textContent=energy;
-  document.getElementById('crystals').textContent=crystals;
-  if(level>=2){
-    document.getElementById('storeBtn')?.remove(); //only add once
-    const storeBtn=document.createElement('button');
-    storeBtn.id='storeBtn';storeBtn.className='btn';storeBtn.textContent='City Builder';
-    storeBtn.onclick=()=>{qs.classList.remove('active');ss.classList.add('active');};
-    document.querySelector('header').appendChild(storeBtn);
-  }
-}
-function showCert(){
-  qs.style.display=ss.style.display='none';
-  document.getElementById('cert').style.display='block';
-}
-</script>
-</body>
-</html>
+  const coeff=rand(2,7),pow=rand(2,5);
+  return {q:`Derivative of  ${coeff}x^${pow}`,a
