@@ -43,7 +43,7 @@
 </header>
 
 <main>
-  <!-- QUEST SCREEN -->
+  <!-- ========= QUEST SCREEN ========= -->
   <div id="questScreen" class="screen active">
     <h2 id="subject">Math</h2>
     <p id="question">Loading question...</p>
@@ -52,7 +52,7 @@
     <button class="btn" id="nextBtn" style="display:none;">Next</button>
   </div>
 
-  <!-- CITY BUILDER STORE -->
+  <!-- ========= CITY BUILDER STORE ========= -->
   <div id="storeScreen" class="screen">
     <h2>City Builder Store</h2>
     <p>Click an item and then click an empty city tile to build.</p>
@@ -67,7 +67,7 @@
     <button class="btn" id="backToQuest">Back to Questions</button>
   </div>
 
-  <!-- CERTIFICATE -->
+  <!-- ========= CERTIFICATE ========= -->
   <div id="cert">
     <h1>🏆 CONGRATULATIONS 🏆</h1>
     <h2>You reached Level 30!</h2>
@@ -77,55 +77,392 @@
 </main>
 
 <script>
-/* ========== ON-THE-FLY QUESTION GENERATOR ========== */
-const usedHashes=new Set();
-function hash(str){return str.split('').reduce((a,c)=>((a<<5)-a+c.charCodeAt(0))&a,0);}
-function rng(seed){const s=Math.sin(seed)*10000;return s-Math.floor(s);}
-function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function randItem(arr){return arr[Math.floor(Math.random()*arr.length)];}
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function roundChoices(n){const correct=Math.round(n);return shuffle([correct,correct+rand(1,5),correct-rand(1,5),correct+rand(6,9)]);}
+/* ====== QUESTION BANK ====== */
+const bank={
+  math:[
+    {q:"8 × 7 = ?",a:["54","56","58","64"],c:1},
+    {q:"Solve 2x + 5 = 13",a:["x=3","x=4","x=5","x=6"],c:1},
+    {q:"Area of circle radius 3",a:["9π","12π","15π","6π"],c:0},
+    {q:"Derivative of x²",a:["x","2x","x²","0"],c:1},
+    {q:"Integral of 1/x",a:["ln x","e^x","x²","0"],c:0},
+    // 6-35
+    {q:"12 × 13 = ?",a:["144","156","148","152"],c:1},
+    {q:"Solve 3x – 7 = 14",a:["x=5","x=6","x=7","x=8"],c:2},
+    {q:"What is 15% of 200?",a:["20","25","30","35"],c:2},
+    {q:"Simplify 18/24",a:["2/3","3/4","5/6","7/8"],c:0},
+    {q:"Value of 2⁵",a:["16","32","64","128"],c:1},
+    {q:"Pythagorean triple among",a:["3-4-6","5-12-13","6-8-11","7-9-12"],c:1},
+    {q:"√144 = ?",a:["11","12","13","14"],c:1},
+    {q:"Next prime after 23",a:["25","27","29","31"],c:2},
+    {q:"GCD of 36 & 48",a:["6","8","12","16"],c:2},
+    {q:"LCM of 6 & 8",a:["12","16","24","32"],c:2},
+    {q:"Convert 0.75 to fraction",a:["1/2","2/3","3/4","4/5"],c:2},
+    {q:"Solve x² = 49",a:["x=5","x=6","x=7","x=8"],c:2},
+    {q:"Perimeter of square side 9",a:["27","36","45","54"],c:1},
+    {q:"Volume of cube side 4",a:["16","32","48","64"],c:3},
+    {q:"Slope of y=3x+2",a:["1","2","3","4"],c:2},
+    {q:"tan 45° = ?",a:["0","1","√2","∞"],c:1},
+    {q:"log₁₀100 = ?",a:["0","1","2","10"],c:2},
+    {q:"Decimal 0.2 as %",a:["2 %","20 %","200 %","0.2 %"],c:1},
+    {q:"Factorial 4! = ?",a:["16","20","24","28"],c:2},
+    {q:"Sum angles triangle",a:["90°","180°","270°","360°"],c:1},
+    {q:"Solve 5x = 0",a:["x=0","x=1","x=5","x=-1"],c:0},
+    {q:"Mean of 4,7,10",a:["6","7","8","9"],c:1},
+    {q:"Median of 3,5,8,11,14",a:["5","8","11","9"],c:1},
+    {q:"Mode of 2,3,3,4,5",a:["2","3","4","5"],c:1},
+    {q:"Range of 6,9,15,21",a:["9","12","15","21"],c:2},
+    {q:"Convert 2 km to m",a:["20","200","2000","20000"],c:2},
+    {q:"90 km/h = ? m/s",a:["20","25","30","35"],c:1},
+    {q:"Compound interest rate if double in 10 yrs (rule 72)",a:["~5 %","~7 %","~10 %","~12 %"],c:1},
+    {q:"e^0 = ?",a:["-1","0","1","∞"],c:2},
+    {q:"Matrix determinant [[a,b],[c,d]] formula",a:["ad+bc","ad-bc","a+d","a-d"],c:1}
+  ],
+  science:[
+    {q:"Planet known as Red Planet",a:["Venus","Mars","Jupiter","Saturn"],c:1},
+    {q:"H₂O is",a:["Salt","Water","Oxygen","Carbon"],c:1},
+    {q:"Speed of light ≈",a:["3×10⁸ m/s","3×10⁶ m/s","3×10⁷ m/s","3×10⁹ m/s"],c:0},
+    {q:"Newton’s 1st law about",a:["Force","Inertia","Energy","Momentum"],c:1},
+    {q:"Photosynthesis produces",a:["CO₂","O₂","H₂","N₂"],c:1},
+    // 6-35
+    {q:"Atomic number of Carbon",a:["4","6","8","12"],c:1},
+    {q:"pH of pure water",a:["0","5","7","14"],c:2},
+    {q:"Hardest natural mineral",a:["Quartz","Diamond","Corundum","Apatite"],c:1},
+    {q:"Gas most abundant in air",a:["Oxygen","Nitrogen","CO₂","Argon"],c:1},
+    {q:"Unit of electric current",a:["Volt","Ohm","Ampere","Watt"],c:2},
+    {q:"Sound travels fastest in",a:["Air","Water","Steel","Vacuum"],c:2},
+    {q:"Earth’s core mainly",a:["Iron","Nickel","Silicon","Oxygen"],c:0},
+    {q:"Vitamin from sunlight",a:["A","B12","C","D"],c:3},
+    {q:"Number of bones adult human",a:["106","206","306","406"],c:1},
+    {q:"Process of cell division",a:["Mitosis","Meiosis","Fission","Fusion"],c:0},
+    {q:"Chemical symbol Gold",a:["Go","Gd","Au","Ag"],c:2},
+    {q:"Closest star to Earth",a:["Proxima Centauri","Sun","Alpha Centauri","Sirius"],c:1},
+    {q:"Light-year measures",a:["Time","Distance","Brightness","Mass"],c:1},
+    {q:"Organ that pumps blood",a:["Lungs","Heart","Kidney","Liver"],c:1},
+    {q:"Acid in stomach",a:["HCl","H₂SO₄","HNO₃","CH₃COOH"],c:0},
+    {q:"Boiling point water °C",a:["90","100","110","120"],c:1},
+    {q:"Force that opposes motion",a:["Gravity","Friction","Magnetism","Tension"],c:1},
+    {q:"Pluto reclassified 2006 as",a:["Comet","Dwarf planet","Asteroid","Moon"],c:1},
+    {q:"Endocrine gland at base of brain",a:["Pineal","Pituitary","Thyroid","Adrenal"],c:1},
+    {q:"Study of fungi",a:["Botany","Mycology","Ornithology","Entomology"],c:1},
+    {q:"Most conductive metal",a:["Copper","Silver","Gold","Aluminum"],c:1},
+    {q:"Particle with no charge",a:["Electron","Proton","Neutron","Positron"],c:2},
+    {q:"Covalent bond involves",a:["Electron sharing","Electron transfer","Proton sharing","Neutron loss"],c:0},
+    {q:"Catalyst function",a:["Speeds reaction","Slows reaction","Changes product","Adds mass"],c:0},
+    {q:"Earth atmosphere layer with ozone",a:["Troposphere","Stratosphere","Mesosphere","Thermosphere"],c:1},
+    {q:"Power unit",a:["Joule","Watt","Newton","Volt"],c:1},
+    {q:"Human body temp °C",a:["35","37","39","41"],c:1},
+    {q:"Chemical formula table salt",a:["NaCl","KCl","CaCl₂","MgCl₂"],c:0},
+    {q:"Largest organ human body",a:["Heart","Brain","Liver","Skin"],c:3},
+    {q:"Red blood cell pigment",a:["Hemoglobin","Chlorophyll","Insulin","Testosterone"],c:0}
+  ],
+  history:[
+    {q:"1st President USA",a:["Jefferson","Washington","Lincoln","Adams"],c:1},
+    {q:"World War II ended",a:["1939","1945","1950","1918"],c:1},
+    {q:"Great Wall located",a:["Japan","India","China","Korea"],c:2},
+    {q:"Year Berlin Wall fell",a:["1987","1989","1991","1993"],c:1},
+    {q:"Wrote Declaration Independence",a:["Washington","Jefferson","Franklin","Madison"],c:1},
+    // 6-35
+    {q:"Ancient wonder still standing",a:["Colossus","Pyramids","Hanging Gardens","Lighthouse"],c:1},
+    {q:"First person on Moon",a:["Buzz Aldrin","Neil Armstrong","Yuri Gagarin","Alan Shepard"],c:1},
+    {q:"Empire built by Romans",a:["Greek","Roman","Ottoman","British"],c:1},
+    {q:"Civil Rights leader 'I Have a Dream'",a:["Malcolm X","Martin Luther King Jr.","Rosa Parks","Thurgood Marshall"],c:1},
+    {q:"City bombed atomic bomb 1945 (not Nagasaki)",a:["Tokyo","Hiroshima","Osaka","Kyoto"],c:1},
+    {q:"Wall built by Hadrian",a:["Scotland","Wales","Ireland","France"],c:0},
+    {q:"Ship sank 1912",a:["Lusitania","Titanic","Britannic","Olympic"],c:1},
+    {q:"Leader of India non-violence",a:["Gandhi","Nehru","Patel","Jinnah"],c:0},
+    {q:"War 1950-1953 Korea",a:["WWII","Korean War","Vietnam War","Cold War"],c:1},
+    {q:"Explorer 1492 Americas",a:["Magellan","Columbus","Vespucci","Da Gama"],c:1},
+    {q:"French Revolution started",a:["1776","1789","1799","1804"],c:1},
+    {q:"First Emperor Rome",a:["Augustus","Nero","Caesar","Tiberius"],c:0},
+    {q:"Medieval fortress residence",a:["Castle","Cathedral","Monastery","Colosseum"],c:0},
+    {q:"Renaissance started in",a:["Italy","France","England","Germany"],c:0},
+    {q:"Mongol leader largest empire",a:["Kublai","Genghis","Attila","Tamerlane"],c:1},
+    {q:"Black Death century",a:["12th","13th","14th","15th"],c:2},
+    {q:"Navigator circumnavigated globe first",a:["Columbus","Magellan","Drake","Cook"],c:1},
+    {q:"American Civil War ended",a:["1863","1864","1865","1866"],c:2},
+    {q:"Union president",a:["Jefferson Davis","Abraham Lincoln","Ulysses Grant","Andrew Johnson"],c:1},
+    {q:"Russian last tsar",a:["Peter","Ivan","Nicholas II","Alexander"],c:2},
+    {q:"Berlin Wall constructed",a:["1955","1961","1965","1971"],c:1},
+    {q:"Women’s suffrage US amendment",a:["16th","18th","19th","21st"],c:2},
+    {q:"Cold War enemy of USA",a:["China","Germany","USSR","Japan"],c:2},
+    {q:"Pyramids built by",a:["Aztecs","Egyptians","Mayans","Incas"],c:1},
+    {q:"First printing press Europe",a:["Gutenberg","Da Vinci","Galileo","Columbus"],c:0},
+    {q:"Olympics birthplace",a:["Rome","Athens","Sparta","Olympia"],c:3},
+    {q:"Longest reigning UK monarch",a:["Victoria","Elizabeth II","George III","Henry VIII"],c:1},
+    {q:"Explorer reached India sea route",a:["Columbus","Da Gama","Magellan","Cook"],c:1},
+    {q:"US bought Louisiana from",a:["Spain","France","Britain","Mexico"],c:1},
+    {q:"Triangular trade involved",a:["Silk","Slaves","Spices","Tea"],c:1}
+  ],
+  coding:[
+    {q:"Language runs browser",a:["Python","C++","JavaScript","Java"],c:2},
+    {q:"HTML stands for",a:["Hyper Tool","Hyper Text","Home Tool","Hyperlinks"],c:1},
+    {q:"CSS styles",a:["Structure","Behavior","Appearance","Data"],c:2},
+    {q:"Array index starts JS",a:["0","1","-1","10"],c:0},
+    {q:"Keyword declares variable JS",a:["var","int","float","string"],c:0},
+    // 6-35
+    {q:"Which is a loop?",a:["if","for","switch","case"],c:1},
+    {q:"Boolean for 'not equal' in JS",a:["!=","!==","<>","~="],c:1},
+    {q:"Print to console JS",a:["print()","console.log()","echo","write()"],c:1},
+    {q:"Data type true/false",a:["String","Boolean","Number","Object"],c:1},
+    {q:"Symbol for single-line comment JS",a:["//","/*","#","<!--"],c:0},
+    {q:"Result: '5' + 2  (JS)",a:["7","52","NaN","Error"],c:1},
+    {q:"HTML tag largest heading",a:["<h1>","<head>","<header>","<hr>"],c:0},
+    {q:"CSS property for text color",a:["color","font-color","text-color","background"],c:0},
+    {q:"Which tag creates hyperlink",a:["<link>","<href>","<a>","<url>"],c:2},
+    {q:"Default port HTTP",a:["21","22","80","443"],c:2},
+    {q:"Git command to copy repo",a:["git push","git clone","git pull","git fork"],c:1},
+    {q:"Python keyword function",a:["func","def","function","lambda"],c:1},
+    {q:"Which language is statically typed",a:["Python","JavaScript","Java","Ruby"],c:2},
+    {q:"SQL command fetch data",a:["GET","FETCH","SELECT","RETRIEVE"],c:2},
+    {q:"HTML attribute for image source",a:["href","src","alt","link"],c:1},
+    {q:"CSS flexbox direction row-reverse value",a:["row","column","row-reverse","reverse"],c:2},
+    {q:"JSON stands for",a:["Java Standard Object Notation","JavaScript Object Notation","Java Source Object Notation","Just Simple Object Notation"],c:1},
+    {q:"Which is NOT a primitive JS",a:["number","string","object","boolean"],c:2},
+    {q:"Operator '??' called",a:["OR","Nullish coalescing","Optional chaining","Ternary"],c:1},
+    {q:"React is a",a:["Database","Framework","Library","Language"],c:2},
+    {q:"HTML document root tag",a:["<html>","<body>","<head>","<!doctype>"],c:0},
+    {q:"Python list append method",a:["add()","push()","append()","insert()"],c:2},
+    {q:"Time complexity of array access by index",a:["O(n)","O(log n)","O(1)","O(n²)"],c:2},
+    {q:"Which status code means 'Not Found'",a:["200","301","401","404"],c:3},
+    {q:"CSS priority order highest",a:["id","class","element","inline style"],c:3},
+    {q:"First programmable computer",a:["ENIAC","Z3","Colossus","UNIVAC"],c:1},
+    {q:"Binary of decimal 5",a:["100","101","110","111"],c:1},
+    {q:"IPv4 address bytes",a:["2","4","6","8"],c:1},
+    {q:"Which company created JavaScript",a:["Microsoft","Netscape","Sun","Google"],c:1},
+    {q:"GitHub default branch name (2021+)",a:["master","main","develop","trunk"],c:1}
+  ],
+  art:[
+    {q:"Primary colors traditional",a:["RGB","RYB","CMYK","BGR"],c:1},
+    {q:"Who painted Mona Lisa",a:["Van Gogh","Da Vinci","Picasso","Rembrandt"],c:1},
+    {q:"Tool blends colors",a:["Brush","Palette knife","Blender","Eraser"],c:0},
+    {q:"Technique dots",a:["Stippling","Cross-hatching","Frottage","Impasto"],c:0},
+    {q:"Style geometric shapes",a:["Realism","Cubism","Romanticism","Baroque"],c:1},
+    // 6-35
+    {q:"Color opposite red on color wheel",a:["Blue","Green","Yellow","Cyan"],c:1},
+    {q:"Famous artist cut ear",a:["Picasso","Van Gogh","Da Vinci","Matisse"],c:1},
+    {q:"Sculpture thinker created by",a:["Rodin","Michelangelo","Donatello","Bernini"],c:0},
+    {q:"Art movement Salvador Dalí",a:["Impressionism","Surrealism","Cubism","Pop Art"],c:1},
+    {q:"Renaissance means",a:["Rebirth","Revival","Reform","Recreation"],c:0},
+    {q:"Paint type fast-drying modern",a:["Oil","Acrylic","Watercolor","Tempera"],c:1},
+    {q:"Which is a printmaking technique",a:["Etching","Oil painting","Fresco","Collage"],c:0},
+    {q:"Artist of 'The Persistence of Memory'",a:["Dalí","Miró","Picasso","Kandinsky"],c:0},
+    {q:"Primary color among",a:["Orange","Green","Red","Purple"],c:2},
+    {q:"Architect of Guggenheim Bilbao",a:["Frank Gehry","I. M. Pei","Zaha Hadid","Tadao Ando"],c:0},
+    {q:"Art Deco peaked",a:["1890s","1920s","1950s","1980s"],c:1},
+    {q:"Who designed St. Peter’s dome",a:["Bernini","Bramante","Michelangelo","Palladio"],c:2},
+    {q:"Medium of 'The Scream'",a:["Oil","Pastel","Ink","Acrylic"],c:1},
+    {q:"Movement Monet founder",a:["Realism","Impressionism","Post-impressionism","Symbolism"],c:1},
+    {q:"Color temperature 'warm' among",a:["Blue","Green","Red","Gray"],c:2},
+    {q:"Fresco painted on",a:["Dry plaster","Wet plaster","Canvas","Wood"],c:1},
+    {q:"Artist 'Girl with a Pearl Earring'",a:["Vermeer","Rembrandt","Hals","Steen"],c:0},
+    {q:"Pop Art icon Andy",a:["Warhol","Koons","Lichtenstein","Haring"],c:0},
+    {q:"Rule of thirds helps",a:["Color mix","Composition","Brush choice","Canvas size"],c:1},
+    {q:"Pottery firing hardens",a:["Clay","Glass","Metal","Plastic"],c:0},
+    {q:"Ink wash art Japanese",a:["Sumi-e","Ukiyo-e","Shodo","Kintsugi"],c:0},
+    {q:"Collage comes French word",a:["To cut","To paste","To glue","To collect"],c:2},
+    {q:"Artist 'Broadway Boogie Woogie'",a:["Mondrian","Kandinsky","Pollock","Rothko"],c:0},
+    {q:"Sculpture 'David' material",a:["Bronze","Marble","Wood","Clay"],c:1},
+    {q:"Hue + Saturation + Value =",a:["RGB","CMYK","HSV","LAB"],c:2},
+    {q:"Pointillism pioneer Georges",a:["Seurat","Signac","Van Gogh","Toulouse"],c:0},
+    {q:"Art movement meaning 'wild beasts'",a:["Fauvism","Cubism","Dada","Futurism"],c:0},
+    {q:"Gold leaf technique",a:["Gilding","Enameling","Etching","Patina"],c:0",a:["Gutenberg","Columbus","Da Vinci","Luther"],c:0},
+    {q:"Olympics birthplace",a:["Athens","Rome","Olympia","Sparta"],c:2},
+    {q:"Viking homeland",a:["Denmark","Norway","Scandinavia","Sweden"],c:2},
+    {q:"Crusades target city",a:["Jerusalem","Rome","Mecca","Constantinople"],c:0},
+    {q:"Industrial Revolution began",a:["France","Germany","Britain","USA"],c:2},
+    {q:"Marco Polo visited",a:["India","China","Japan","Persia"],c:1}
+  ],
+  coding:[
+    {q:"Language runs browser",a:["Python","C++","JavaScript","Java"],c:2},
+    {q:"HTML stands for",a:["Hyper Tool","Hyper Text","Home Tool","Hyperlinks"],c:1},
+    {q:"CSS styles",a:["Structure","Behavior","Appearance","Data"],c:2},
+    {q:"Array index starts",a:["0","1","-1","10"],c:0},
+    {q:"Keyword declares variable JS",a:["var","int","float","string"],c:0},
+    // 6-35
+    {q:"Python creator",a:["Guido van Rossum","Linus Torvalds","Dennis Ritchie","Bjarne Stroustrup"],c:0},
+    {q:"Git is",a:["OS","VCS","DB","Lang"],c:1},
+    {q:"HTTP status 404 means",a:["OK","Not Found","Server Error","Forbidden"],c:1},
+    {q:"SQL used for",a:["Queries","Styling","Scripting","Drawing"],c:0},
+    {q:"OOP stands for",a:["Object Oriented Programming","Open Office Protocol","Online Object Process","Open Oriented Process"],c:0},
+    {q:"Boolean values",a:["T,F","Y,N","1,0","Yes,No"],c:0},
+    {q:"Loop 'for each' keyword JS",a:["for...in","for...of","foreach","loop"],c:1},
+    {q:"React is",a:["Framework","Library","Language","DB"],c:1},
+    {q:"Machine learning subset",a:["AI","VR","AR","UI"],c:0},
+    {q:"Binary 1010 decimal",a:["8","9","10","11"],c:2},
+    {q:"Hex color #000000",a:["White","Black","Red","Transparent"],c:1},
+    {q:"Terminal command list files Unix",a:["ls","dir","list","show"],c:0},
+    {q:"Merge sort worst case",a:["O(n)","O(n log n)","O(n²)","O(log n)"],c:1},
+    {q:"IPv4 address bits",a:["16","32","64","128"],c:1},
+    {q:"First programmable computer",a:["ENIAC","Z3","Colossus","UNIVAC"],c:1},
+    {q:"YAML stands for",a:["Yet Another Markup Lang","YAML Ain’t Markup Lang","You Always Must Load","Young And Modern Lang"],c:1},
+    {q:"Docker containers use",a:["Hardware","OS kernel","Hypervisor","Firmware"],c:1},
+    {q:"First high-level lang",a:["C","Fortran","Basic","Pascal"],c:1},
+    {q:"HTTPS port",a:["80","443","22","21"],c:1},
+    {q:"JSON stands for",a:["JavaScript Object Notation","Java Standard Object Notation","Java Source Object Notation","Just Simple Object Notation"],c:0},
+    {q:"CSS flex-direction default",a:["row","column","row-reverse","column-reverse"],c:0},
+    {q:"First step git workflow",a:["git add","git commit","git push","git init"],c:0},
+    {q:"Big-O best descriptive",a:["O(1)","O(n)","O(n²)","O(2^n)"],c:0},
+    {q:"Linux kernel license",a:["MIT","GPL","Apache","BSD"],c:1},
+    {q:"Cloud acronym IaaS",a:["Internet as a Service","Infrastructure as a Service","Integration as a Service","Intelligence as a Service"],c:1},
+    {q:"Useful JS array method filter returns",a:["Single value","New array","Nothing","String"],c:1},
+    {q:"Unicode UTF-8 max bytes single char",a:["1","2","3","4"],c:3},
+    {q:"First computer bug actual",a:["Moth","Fly","Ant","Mosquito"],c:0},
+    {q:"DNS stands for",a:["Domain Name System","Dynamic Network Service","Data Naming Service","Directory Network Service"],c:0},
+    {q:"Agile principle count",a:["4","10","12","20"],c:2}
+  ],
+  art:[
+    {q:"Primary colors",a:["RGB","RYB","CMYK","BGR"],c:1},
+    {q:"Who painted Mona Lisa",a:["Van Gogh","Da Vinci","Picasso","Rembrandt"],c:1},
+    {q:"Tool blends colors",a:["Brush","Palette knife","Blender","Eraser"],c:0},
+    {q:"Technique of dots",a:["Stippling","Cross-hatching","Frottage","Impasto"],c:0},
+    {q:"Style geometric shapes",a:["Realism","Cubism","Romanticism","Baroque"],c:1},
+    // 6-35
+    {q:"Color wheel opposite called",a:["Analogous","Complementary","Triadic","Monochrome"],c:1},
+    {q:"Sculpture 'Thinker' artist",a:["Rodin","Michelangelo","Donatello","Bernini"],c:0},
+    {q:"Famous Japanese print 'Wave' artist",a:["Hokusai","Hiroshige","Utamaro","Sharaku"],c:0},
+    {q:"Renaissance means",a:["Rebirth","Reform","Revival","Recreation"],c:0},
+    {q:"Medium of 'The Starry Night'",a:["Oil","Watercolor","Acrylic","Fresco"],c:0},
+    {q:"Architect of Fallingwater",a:["Wright","Le Corbusier","Mies","Gaudí"],c:0},
+    {q:"Art movement Duchamp fountain",a:["Dada","Surrealism","Futurism","Pop"],c:0},
+    {q:"Painter of Sistine Chapel ceiling",a:["Leonardo","Michelangelo","Raphael","Donatello"],c:1},
+    {q:"Photography invented century",a:["17th","18th","19th","20th"],c:2},
+    {q:"Hue, saturation and",a:["Value","Intensity","Temperature","Shade"],c:0},
+    {q:"Fresco technique paint on",a:["Dry plaster","Wet plaster","Canvas","Wood"],c:1},
+    {q:"Pop-art icon Marilyn",a:["Warhol","Lichtenstein","Haring","Basquiat"],c:0},
+    {q:"Gothic architecture feature",a:["Dome","Flying buttress","Rotunda","Ziggurat"],c:1},
+    {q:"Art Deco popularity decade",a:["1910s","1920s-30s","1940s","1950s"],c:1},
+    {q:"Potter’s wheel makes",a:["Sculpture","Ceramics","Glass","Textile"],c:1},
+    {q:"Pointillism pioneer",a:["Seurat","Signac","Van Gogh","Cézanne"],c:0},
+    {q:"Impression sunrise painter",a:["Monet","Renoir","Degas","Manet"],c:0},
+    {q:"Lost wax method used for",a:["Bronze casting","Marble carving","Wood cut","Etching"],c:0},
+    {q:"Primary pigment subtractive",a:["Cyan","Magenta","Yellow","All"],c:3},
+    {q:"Golden ratio approximate",a:["1.414","1.618","2.718","3.142"],c:1},
+    {q:"Ukiyo-e genre subject",a:["Samurai","Landscapes/courtesans","Gods","Animals"],c:1},
+    {q:"Bauhaus school country",a:["Germany","France","Austria","Netherlands"],c:0},
+    {q:"Collage technique glue",a:["Paper","Stone","Metal","Glass"],c:0},
+    {q:"Chiaroscuro emphasizes",a:["Color","Light-dark","Line","Texture"],c:1},
+    {q:"Minimal art reduces to",a:["Essential forms","Maximum detail","Bright color","Narrative"],c:0},
+    {q:"Canvas fabric traditionally",a:["Linen","Cotton","Silk","Wool"],c:0},
+    {q:"Mural scale typically",a:["Small","Large wall","Handheld","Digital only"],c:1},
+    {q:"Art Nouveau nature inspiration",a:["True","False"],c:0},
+    {q:"Performance art medium",a:["Paint","Artist body","Clay","Sound only"],c:1},
+    {q:"Origami origin country",a:["China","Japan","Korea","Thailand"],c:1}
+  ]
+};
+/* ====== STATE ====== */
+let level=1,energy=50,crystals=0,currentQ=null,selectedItem=null;
+const MAX_LEVEL=30;
+const subjects=['math','science','history','coding','art'];
 
-function makeQuestion(level){
-  const subjects=['math','science','history','coding','art'];
+/* ====== DOM ====== */
+const qs=document.getElementById('questScreen');
+const ss=document.getElementById('storeScreen');
+const qEl=document.getElementById('question');
+const choicesEl=document.getElementById('choices');
+const feedbackEl=document.getElementById('feedback');
+const nextBtn=document.getElementById('nextBtn');
+const cityGrid=document.getElementById('cityGrid');
+
+/* ====== INIT ====== */
+document.getElementById('level').textContent=level;
+document.getElementById('energy').textContent=energy;
+document.getElementById('crystals').textContent=crystals;
+loadQuestion();
+buildGrid();
+bindStore();
+
+/* ====== QUEST LOGIC ====== */
+function loadQuestion(){
   const subject=subjects[(level-1)%subjects.length];
-  const diff=level;
-  let qObj,h;
-  do{
-    qObj=generateBySubject(subject,diff);
-    h=hash(JSON.stringify(qObj));
-  }while(usedHashes.has(h));
-  usedHashes.add(h);
-  return qObj;
+  const list=bank[subject];
+  currentQ=list[(level-1)%list.length];
+  document.getElementById('subject').textContent=subject.charAt(0).toUpperCase()+subject.slice(1);
+  qEl.textContent=currentQ.q;
+  choicesEl.innerHTML='';
+  currentQ.a.forEach((ans,i)=>{
+    const btn=document.createElement('button');
+    btn.className='choice';
+    btn.textContent=String.fromCharCode(65+i)+') '+ans;
+    btn.onclick=()=>checkAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+  feedbackEl.textContent='';
+  nextBtn.style.display='none';
 }
-function generateBySubject(subj,d){
-  switch(subj){
-    case 'math': return mathQ(d);
-    case 'science': return scienceQ(d);
-    case 'history': return historyQ(d);
-    case 'coding': return codingQ(d);
-    case 'art': return artQ(d);
+function checkAnswer(idx){
+  const correct=idx===currentQ.c;
+  if(correct){
+    energy+=10;crystals+=5;
+    feedbackEl.textContent='✅ Correct! +10 Energy +5 Crystals';
+    feedbackEl.className='correct';
+  }else{
+    energy=Math.max(0,energy-5);
+    feedbackEl.textContent=`❌ Wrong. The answer was ${String.fromCharCode(65+currentQ.c)}) ${currentQ.a[currentQ.c]}`;
+    feedbackEl.className='';
+  }
+  updateHUD();
+  Array.from(choicesEl.children).forEach(b=>b.disabled=true);
+  nextBtn.style.display='inline-block';
+}
+nextBtn.onclick=()=>{
+  if(level>=MAX_LEVEL){showCert();return;}
+  level++;energy=Math.min(energy+5,999); //bonus energy each level
+  updateHUD();
+  loadQuestion();
+};
+
+/* ====== CITY BUILDER ====== */
+function buildGrid(){
+  cityGrid.innerHTML='';
+  for(let i=0;i<36;i++){
+    const cell=document.createElement('div');
+    cell.className='cell';
+    cell.dataset.index=i;
+    cell.onclick=()=>placeItem(cell);
+    cityGrid.appendChild(cell);
   }
 }
-/* ------------- subject generators ------------- */
-function mathQ(d){
-  if(d<=5){
-    const a=rand(2,9),b=rand(2,9),op=randItem(['+','-','×']);
-    const ans=op==='+'?a+b:op==='-'?a-b:a*b;
-    return {q:`${a} ${op} ${b} = ?`,a:shuffle([ans,ans+rand(1,3),ans-rand(1,3),ans+rand(4,6)]),c:0};
+function bindStore(){
+  document.querySelectorAll('.storeBtn').forEach(btn=>{
+    btn.onclick=()=>{
+      selectedItem={type:btn.dataset.item,cost:+btn.dataset.cost,energy:+btn.dataset.energy};
+      document.querySelectorAll('.storeBtn').forEach(b=>b.style.boxShadow='');
+      btn.style.boxShadow='0 0 15px var(--glow)';
+    };
+  });
+}
+function placeItem(cell){
+  if(!selectedItem){alert('Pick an item in the store first.');return;}
+  if(cell.classList.length>1){alert('Tile occupied.');return;}
+  if(crystals<selectedItem.cost){alert('Not enough crystals.');return;}
+  if(energy<selectedItem.energy){alert('Not enough energy.');return;}
+  crystals-=selectedItem.cost;
+  energy-=selectedItem.energy;
+  cell.classList.add(selectedItem.type);
+  cell.textContent={house:'🏠',building:'🏢',park:'🌳',school:'🏫',statue:'🗿'}[selectedItem.type];
+  updateHUD();
+}
+document.getElementById('backToQuest').onclick=()=>{
+  qs.classList.add('active');ss.classList.remove('active');
+};
+
+/* ====== NAV ====== */
+function updateHUD(){
+  document.getElementById('level').textContent=level;
+  document.getElementById('energy').textContent=energy;
+  document.getElementById('crystals').textContent=crystals;
+  if(level>=2){
+    document.getElementById('storeBtn')?.remove(); //only add once
+    const storeBtn=document.createElement('button');
+    storeBtn.id='storeBtn';storeBtn.className='btn';storeBtn.textContent='City Builder';
+    storeBtn.onclick=()=>{qs.classList.remove('active');ss.classList.add('active');};
+    document.querySelector('header').appendChild(storeBtn);
   }
-  if(d<=10){
-    const a=rand(2,6),x=rand(1,9),c=a*x+rand(2,8);
-    return {q:`Solve  ${a}x + ${c-a*x} = ${c}`,a:[`x=${x-2}`,`x=${x}`,`x=${x+2}`,`x=${x+4}`],c:1};
-  }
-  if(d<=15){
-    const r=rand(3,12),area=Math.PI*r*r;
-    return {q:`Area of circle with radius ${r} (round to nearest whole)`,a:roundChoices(area),c:0};
-  }
-  if(d<=20){
-    const x1=rand(-5,5),x2=rand(-5,5),a=1;
-    const b=-(x1+x2),c=x1*x2;
-    return {q:`Factor  x² ${b>=0?'+':''} ${b}x ${c>=0?'+':''} ${c}`,a:[`(x${-x1>=0?'+':''}${-x1})(x${-x2>=0?'+':''}${-x2})`,`(x+2)(x+3)`,`(x+1)(x+6)`,`(x-4)(x+9)`],c:0};
-  }
-  const coeff=rand(2,7),pow=rand(2,5);
-  return {q:`Derivative of  ${coeff}x^${pow}`,a
+}
+function showCert(){
+  qs.style.display=ss.style.display='none';
+  document.getElementById('cert').style.display='block';
+}
+</script>
+</body>
+</html>
